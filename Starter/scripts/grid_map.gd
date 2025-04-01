@@ -63,15 +63,19 @@ func _ready():
 func set_cells():
 	remove_all_tiles()
 	
-	add_row(Tile.TileNames.orange, Tile.TileNames.goal, 1)
-	add_row(Tile.TileNames.orange)
-	add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
-	add_row(Tile.TileNames.road)
-	add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
-	add_row(Tile.TileNames.orange)
-	add_row(Tile.TileNames.orange)
+	#add_row(Tile.TileNames.orange, Tile.TileNames.goal, 1)
+	#add_row(Tile.TileNames.orange)
+	#add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
+	#add_row(Tile.TileNames.road)
+	#add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
+	#add_row(Tile.TileNames.orange)
+	#add_row(Tile.TileNames.orange)
 	
-	set_player_position_to_last_row()
+	add_row(Tile.TileNames.orange)
+	add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
+	add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
+	
+	set_player_position_to_grid_row(0)
 
 	tiles_instantiated = true
 	
@@ -113,7 +117,7 @@ func set_row_tiles(row: int, tile: Tile.TileNames, second_tile: Tile.TileNames =
 
 func add_row(tile: Tile.TileNames, second_tile: Tile.TileNames = Tile.TileNames.orange, second_tile_count: int = 0):
 	set_row_tiles(grid_size_z, tile, second_tile, second_tile_count)
-	grid_size_z += 1
+	grid_size_z -= 1
 
 func set_player_position_to_grid_row(row: int):
 	player_start_position = to_global(Vector3i(range(0, grid_size_x - 1, 2).pick_random(), 0, row * tile_size))

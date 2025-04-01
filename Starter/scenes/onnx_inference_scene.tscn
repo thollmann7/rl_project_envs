@@ -22,7 +22,7 @@ glow_enabled = true
 
 [node name="Sync" type="Node" parent="."]
 script = ExtResource("2_5kbv3")
-control_mode = 2
+control_mode = 0
 action_repeat = 1
 speed_up = 0.1
 onnx_model_path = "model.onnx"

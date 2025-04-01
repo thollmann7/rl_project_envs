@@ -73,9 +73,11 @@ func _physics_process(_delta: float) -> void:
 	# Reset on timeout, this is implemented in parent class to set needs_reset to true,
 	# we are re-implementing here to call player.game_over() that handles the game reset.
 	n_steps += 1
+	# TODO change this back
 	if n_steps > reset_after:
-		player.game_over(0)
-		player.print_game_status("Episode timed out.")
+		pass
+		#player.game_over(0)
+		#player.print_game_status("Episode timed out.")
 
 ## Defines the actions for the AI agent
 func get_action_space() -> Dictionary:
@@ -106,6 +108,7 @@ func set_action(action = null) -> void:
 ## Applies user input actions to the robot
 func get_user_input() -> void:
 	if Input.is_action_just_pressed("move_up"):
+		player.map.add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
 		player.requested_movement = Vector3.FORWARD
 	elif Input.is_action_just_pressed("move_right"):
 		player.requested_movement = Vector3.RIGHT

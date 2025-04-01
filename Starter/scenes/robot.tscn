@@ -198,7 +198,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00394951, 0, -0.18)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="robot"]
 libraries = {
-"": SubResource("AnimationLibrary_g7kmm")
+&"": SubResource("AnimationLibrary_g7kmm")
 }
 autoplay = "idle"
 speed_scale = 16.0

@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://dn2auvcty4aoe"]
+[gd_scene load_steps=7 format=3 uid="uid://dn2auvcty4aoe"]
 
 [ext_resource type="PackedScene" uid="uid://bsuw6dqwq2e3v" path="res://scenes/robot.tscn" id="1_2k47m"]
+[ext_resource type="Script" uid="uid://bmtk1e1xv5fqc" path="res://scenes/camera_3d.gd" id="1_rurhu"]
 [ext_resource type="PackedScene" uid="uid://crui8soua8lj2" path="res://scenes/tile.tscn" id="2_ltmsi"]
 [ext_resource type="Script" uid="uid://bl221xsbvr48s" path="res://scripts/car_manager.gd" id="4_jfcfq"]
 [ext_resource type="Script" uid="uid://crcy70dh2t4t1" path="res://scripts/grid_map.gd" id="4_lrlqi"]
@@ -8,9 +9,11 @@
 
 [node name="GameScene" type="Node3D"]
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.615661, 0.788011, 0, -0.788011, 0.615661, 5, 10, 15.95)
+[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("player")]
+transform = Transform3D(1, 0, 0, 0, 0.422618, 0.906308, 0, -0.906308, 0.422618, 5, 10, 5)
 size = 12.748
+script = ExtResource("1_rurhu")
+player = NodePath("../Robot")
 
 [node name="Map" type="Node3D" parent="."]
 script = ExtResource("4_lrlqi")

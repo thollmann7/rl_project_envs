@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://qnxlq4cwno4t"]
 
 [ext_resource type="PackedScene" uid="uid://dn2auvcty4aoe" path="res://scenes/game_scene.tscn" id="1_0y8h2"]
-[ext_resource type="Script" path="res://addons/godot_rl_agents/sync.gd" id="2_5kbv3"]
+[ext_resource type="Script" uid="uid://c0ftrqp4nu578" path="res://addons/godot_rl_agents/sync.gd" id="2_5kbv3"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bdk3k"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)

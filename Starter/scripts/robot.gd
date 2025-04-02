@@ -69,6 +69,7 @@ func _process_movement(_delta):
 					# change coin to orange tile
 					tile.id = int(Tile.TileNames.orange)
 					map.swap_tile(tile, Tile.TileNames.orange)
+					map.check_doors()
 				# THIS IS THE GOAL STATE
 				#elif tile.id == tile.TileNames.goal:
 					# If a goal tile is reached, end episode with reward +1

@@ -64,10 +64,7 @@ func set_cells():
 	
 	add_row(Tile.TileNames.orange)
 	add_row(Tile.TileNames.orange, Tile.TileNames.coin, 2)
-	add_row(Tile.TileNames.orange, Tile.TileNames.coin, 2)
-	add_row(Tile.TileNames.orange, Tile.TileNames.coin, 2)
-	add_row(Tile.TileNames.orange, Tile.TileNames.coin, 2)
-	add_row(Tile.TileNames.orange, Tile.TileNames.coin, 2)
+	add_row(Tile.TileNames.tree, Tile.TileNames.door_closed, 1)
 	
 	# TODO
 	# coin behind wall
@@ -148,3 +145,20 @@ func set_player_position_to_grid_row(row: int):
 	
 func swap_tile(old_tile, new_tile):
 	create_tile(new_tile, old_tile.position, old_tile)
+
+func check_doors():
+	var first_closed_door = null
+	for tile in $Tiles.get_children():
+		if tile.id == int(Tile.TileNames.door_closed):
+			first_closed_door = tile
+			break
+	if first_closed_door == null:
+		return
+	for tile in $Tiles.get_children():
+		if tile.id == int(Tile.TileNames.coin):
+			if tile.position.z >= first_closed_door.position.z:
+				return
+	swap_tile(first_closed_door, Tile.TileNames.door_open)
+	
+		
+		

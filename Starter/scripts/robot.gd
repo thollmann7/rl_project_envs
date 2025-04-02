@@ -9,6 +9,7 @@ class_name Player
 
 @export var map: Map
 @export var car_manager: CarManager
+@export var camera: Camera3D
 
 @onready var _ai_controller := $AIController3D
 @onready var visual_robot: Node3D = $robot
@@ -105,6 +106,8 @@ func reset():
 	global_position = Vector3(map.player_start_position) + Vector3.UP * 1.5
 	# and also reset or create (on first start) the cars
 	car_manager.update_cars()
+	# reset camera to initial position
+	camera.reset()
 
 func print_game_status(message: String):
 	if print_game_status_enabled:

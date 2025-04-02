@@ -27,6 +27,7 @@ script = ExtResource("4_jfcfq")
 map = NodePath("../Map")
 car_scene = ExtResource("4_nsbp8")
 
-[node name="Robot" parent="." node_paths=PackedStringArray("map", "car_manager") instance=ExtResource("1_2k47m")]
+[node name="Robot" parent="." node_paths=PackedStringArray("map", "car_manager", "camera") instance=ExtResource("1_2k47m")]
 map = NodePath("../Map")
 car_manager = NodePath("../Cars")
+camera = NodePath("../Camera3D")

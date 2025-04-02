@@ -13,6 +13,8 @@ class_name Player
 @onready var _ai_controller := $AIController3D
 @onready var visual_robot: Node3D = $robot
 
+var furthest_z_reached = 0
+
 var last_dist_to_goal
 
 #region Set by AIController
@@ -24,6 +26,10 @@ func _ready():
 	reset()
 
 func _physics_process(delta):
+	# negative, bc we go towards negative z
+	if position.z < furthest_z_reached:
+		furthest_z_reached = position.z
+		map.update_layout(furthest_z_reached / 2)
 	if _ai_controller.needs_reset:
 		game_over()
 	_process_movement(delta)
@@ -90,6 +96,7 @@ func game_over(reward = 0.0):
 
 func reset():
 	last_dist_to_goal = null
+	furthest_z_reached = 0
 	# Order of resetting is important:
 	# We reset the map first, which sets a new player start position
 	# and the road segments (needed to know where to spawn the cars)

@@ -108,7 +108,6 @@ func set_action(action = null) -> void:
 ## Applies user input actions to the robot
 func get_user_input() -> void:
 	if Input.is_action_just_pressed("move_up"):
-		player.map.add_row(Tile.TileNames.road)#, Tile.TileNames.tree, 2)
 		player.requested_movement = Vector3.FORWARD
 	elif Input.is_action_just_pressed("move_right"):
 		player.requested_movement = Vector3.RIGHT

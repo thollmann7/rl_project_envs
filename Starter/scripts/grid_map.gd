@@ -20,11 +20,12 @@ var tile_size: int = 2
 var grid_size_x = 6
 
 ## Number of rows in the grid
-var grid_size_z = 0
-
+var current_furthest_row = 0
 var road_rows: Array[Vector2]
-
 var tiles_instantiated: bool = false
+
+const rows_behind_player = 3
+const rows_infrontof_player = 6
 
 ## Removes all tile nodes on first launch (if any are added in the editor)
 ## and on subsequent calls, it hides all tiles
@@ -37,7 +38,7 @@ func remove_all_tiles():
 			
 	tile_positions.clear()
 	road_rows.clear()
-	grid_size_z = 0
+	current_furthest_row = 0
 
 ## Adds a tile to the grid, takes a scene containing the tile and grid position
 func create_tile(tile_name: Tile.TileNames, grid_position: Vector3i):
@@ -63,7 +64,6 @@ func _ready():
 
 func set_cells():
 	remove_all_tiles()
-	
 	#add_row(Tile.TileNames.orange, Tile.TileNames.goal, 1)
 	#add_row(Tile.TileNames.orange)
 	#add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
@@ -72,8 +72,6 @@ func set_cells():
 	#add_row(Tile.TileNames.orange)
 	#add_row(Tile.TileNames.orange)
 	
-	add_row(Tile.TileNames.orange)
-	add_row(Tile.TileNames.orange)
 	add_row(Tile.TileNames.orange)
 	add_row(Tile.TileNames.road)
 	#add_row(Tile.TileNames.road, Tile.TileNames.orange, 0, 1)
@@ -92,7 +90,6 @@ func get_tile(grid_pos: Vector3i):
 	if not grid_pos in tile_positions:
 		return null
 	return instantiated_tiles[grid_pos]
-	
 
 func get_grid_position(global_pos: Vector3i):
 	var grid_pos = Vector3i(to_local(global_pos) / 2.0)
@@ -120,12 +117,17 @@ func set_row_tiles(row: int, tile: Tile.TileNames, second_tile: Tile.TileNames =
 		road_rows.append(Vector2(row, tile_type))
 		car_manager.update_cars()
 
+func update_layout(furthest_row_reached):
+	print("update")
+	# create new rows infront:
+	# we add 1, as "current furthest" actually means next to be instantiated
+	while current_furthest_row + 1 > furthest_row_reached - rows_infrontof_player:
+		add_row(Tile.TileNames.orange)
+	
+
 func add_row(tile: Tile.TileNames, second_tile: Tile.TileNames = Tile.TileNames.orange, second_tile_count: int = 0, tile_type: int = 0):
-	set_row_tiles(grid_size_z, tile, second_tile, second_tile_count, tile_type)
-	grid_size_z -= 1
+	set_row_tiles(current_furthest_row, tile, second_tile, second_tile_count, tile_type)
+	current_furthest_row -= 1
 
 func set_player_position_to_grid_row(row: int):
 	player_start_position = to_global(Vector3i(range(0, grid_size_x - 1, 2).pick_random(), 0, row * tile_size))
-	
-func set_player_position_to_last_row():
-	set_player_position_to_grid_row(grid_size_z - 1)

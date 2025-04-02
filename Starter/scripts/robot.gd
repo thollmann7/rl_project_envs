@@ -57,23 +57,29 @@ func _process_movement(_delta):
 		if not tile:
 			# Push the robot back if there's no tile to move to (out of map boundary)
 			global_position -= (requested_movement * movement_step)
-		elif tile.id == tile.TileNames.tree:
-			# Push the robot back if it has moved to a tree tile
-			global_position -= (requested_movement * movement_step)
-		elif tile.id == tile.TileNames.water:
-			# die if step in water
-			game_over(0)
-		# THIS IS THE GOAL STATE
-		#elif tile.id == tile.TileNames.goal:
-			# If a goal tile is reached, end episode with reward +1
-		#	game_over(1)
-		#	print_game_status("Success, reached goal")
 		else:
-			for car in car_manager.cars:
-				if get_grid_position() == map.get_grid_position(car.global_position):
-					# If the robot moved to a car's current position, end episode
+			match tile.id:
+				tile.TileNames.tree:
+					# Push the robot back if it has moved to a tree tile
+					global_position -= (requested_movement * movement_step)
+				tile.TileNames.water:
+					# die if step in water
 					game_over(0)
-					print_game_status("Failed, hit car while walking")
+				tile.TileNames.coin:
+					# change coin to orange tile
+					tile.id = int(Tile.TileNames.orange)
+					map.swap_tile(tile, Tile.TileNames.orange)
+				# THIS IS THE GOAL STATE
+				#elif tile.id == tile.TileNames.goal:
+					# If a goal tile is reached, end episode with reward +1
+				#	game_over(1)
+				#	print_game_status("Success, reached goal")
+				_:
+					for car in car_manager.cars:
+						if get_grid_position() == map.get_grid_position(car.global_position):
+							# If the robot moved to a car's current position, end episode
+							game_over(0)
+							print_game_status("Failed, hit car while walking")
 
 		# After processing the move, zero the movement for the next step
 		# (only in case of human control)

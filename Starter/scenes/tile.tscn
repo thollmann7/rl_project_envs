@@ -21,6 +21,7 @@ script = ExtResource("1_xode2")
 [node name="water_tile" parent="." instance=ExtResource("5_6p3j2")]
 
 [node name="coin" parent="." instance=ExtResource("6_284l3")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
 
 [node name="door_closed" parent="." instance=ExtResource("7_j3iir")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)

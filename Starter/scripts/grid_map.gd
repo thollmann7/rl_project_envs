@@ -37,15 +37,20 @@ func remove_all_tiles():
 	current_furthest_row = 0
 
 ## Adds a tile to the grid, takes a scene containing the tile and grid position
-func create_tile(tile_name: Tile.TileNames, grid_position: Vector3i):
-	if instantiated_tiles.has(grid_position):
-		instantiated_tiles[grid_position].set_tile(tile_name)
-		tile_positions.append(grid_position)
-		return
+func create_tile(tile_name: Tile.TileNames, grid_position: Vector3i, sibling: Tile = null):
+	#if instantiated_tiles.has(grid_position):
+		#instantiated_tiles[grid_position].set_tile(tile_name)
+		#tile_positions.append(grid_position)
+		#return
 
 	var new_tile = tile.instantiate() as Tile
-	new_tile.position = grid_position * tile_size
-	$Tiles.add_child(new_tile)
+	if sibling:
+		new_tile.position = grid_position
+		sibling.add_sibling(new_tile)
+		$Tiles.remove_child(sibling)
+	else:
+		new_tile.position = grid_position * tile_size
+		$Tiles.add_child(new_tile)
 	instantiated_tiles[grid_position] = new_tile
 	new_tile.set_tile(tile_name)
 	tile_positions.append(grid_position)
@@ -58,10 +63,16 @@ func set_cells():
 	remove_all_tiles()
 	
 	add_row(Tile.TileNames.orange)
-	add_row(Tile.TileNames.orange, Tile.TileNames.water, 2)
-	add_row(Tile.TileNames.orange, Tile.TileNames.water, 2)
-	add_row(Tile.TileNames.orange, Tile.TileNames.water, 2)
-	add_row(Tile.TileNames.orange, Tile.TileNames.water, 2)
+	add_row(Tile.TileNames.orange, Tile.TileNames.coin, 2)
+	add_row(Tile.TileNames.orange, Tile.TileNames.coin, 2)
+	add_row(Tile.TileNames.orange, Tile.TileNames.coin, 2)
+	add_row(Tile.TileNames.orange, Tile.TileNames.coin, 2)
+	add_row(Tile.TileNames.orange, Tile.TileNames.coin, 2)
+	
+	# TODO
+	# coin behind wall
+	# row of 1-6 coins
+	# door open
 	
 	#add_row(Tile.TileNames.orange)
 	#add_row(Tile.TileNames.road)
@@ -126,7 +137,7 @@ func update_layout(furthest_row_reached):
 	if update_roads:
 		road_rows.remove_at(0)
 		car_manager.update_cars()
-			
+		
 
 func add_row(tile: Tile.TileNames, second_tile: Tile.TileNames = Tile.TileNames.orange, second_tile_count: int = 0, tile_type: int = 0):
 	set_row_tiles(current_furthest_row, tile, second_tile, second_tile_count, tile_type)
@@ -134,3 +145,6 @@ func add_row(tile: Tile.TileNames, second_tile: Tile.TileNames = Tile.TileNames.
 
 func set_player_position_to_grid_row(row: int):
 	player_start_position = to_global(Vector3i(range(0, grid_size_x - 1, 2).pick_random(), 1.5, row * tile_size))
+	
+func swap_tile(old_tile, new_tile):
+	create_tile(new_tile, old_tile.position, old_tile)

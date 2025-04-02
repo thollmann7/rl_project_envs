@@ -75,12 +75,9 @@ func set_cells():
 	add_row(Tile.TileNames.orange)
 	add_row(Tile.TileNames.road)
 	add_row(Tile.TileNames.orange)
-	add_row(Tile.TileNames.road)
+	add_row(Tile.TileNames.road, Tile.TileNames.orange, 0, 1)
 	add_row(Tile.TileNames.orange)
-	add_row(Tile.TileNames.road)
-	#add_row(Tile.TileNames.road, Tile.TileNames.orange, 0, 1)
-	#add_row(Tile.TileNames.road, Tile.TileNames.orange, 0, 2)
-	#add_row(Tile.TileNames.road, Tile.TileNames.orange, 0, 3)
+	add_row(Tile.TileNames.road, Tile.TileNames.orange, 0, 2)
 	set_player_position_to_grid_row(0)
 
 	tiles_instantiated = true

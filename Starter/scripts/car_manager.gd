@@ -14,11 +14,11 @@ func _ready() -> void:
 	pass
 
 
-func create_car(row_number, car_type):
+func create_car(row_number, car_type : int):
+	print("creating car of type %s" % car_type)
 	var new_car = car_scene.instantiate()
 	new_car.row_number = row_number
 	new_car.car_type = car_type
-	# type 0:
 	new_car.left_edge_x = 0
 	new_car.right_edge_x = (map.grid_size_x - 1) * map.tile_size
 	new_car.step_size = map.tile_size
@@ -26,14 +26,19 @@ func create_car(row_number, car_type):
 	new_car.position.x = range(new_car.left_edge_x + 2, new_car.right_edge_x - 2, 2).pick_random()
 	new_car.position.y = map.tile_size / 2 + 0.75 # 0.75 is to make the bottom of the car be at road height
 	new_car.position.z = row_number * 2
-
-	new_car.current_direction = 1 if randi_range(0, 1) == 0 else -1
 	
+	match car_type:
+		1:
+			new_car.current_direction = 1
+		2:
+			new_car.current_direction = -1
+		_:
+			new_car.current_direction = 1 if randi_range(0, 1) == 0 else -1
+			
 	add_child(new_car)
 	cars.append(new_car)
 		
 func update_cars():
-	print(cars)
 	# remove cars that don't belong to any row (bc it got deleted)
 	for car in cars:
 		# we use 'greater than' bc we go towards negative z with higher rows

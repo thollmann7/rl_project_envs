@@ -14,7 +14,20 @@ var current_direction: int = 1
 #endregion
 
 func _physics_process(_delta: float) -> void:
-	if not (position.x > left_edge_x and position.x < right_edge_x):
-		current_direction = -current_direction
-		rotation.y = current_direction / 2.0 * PI
-	position.x += step_size * current_direction
+	var skip_move = false
+	match car_type:
+		0:
+			if not (position.x > left_edge_x and position.x < right_edge_x):
+				current_direction = -current_direction
+				rotation.y = current_direction / 2.0 * PI
+		1:
+			if position.x == right_edge_x:
+				position.x = left_edge_x
+				skip_move = true
+		2:
+			if position.x == left_edge_x:
+				position.x = right_edge_x
+				skip_move = true
+				
+	if not skip_move:
+		position.x += step_size * current_direction

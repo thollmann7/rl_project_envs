@@ -45,14 +45,13 @@ func create_tile(tile_name: Tile.TileNames, grid_position: Vector3i, sibling: Ti
 
 	var new_tile = tile.instantiate() as Tile
 	if sibling:
-		new_tile.position = grid_position
 		sibling.add_sibling(new_tile)
 		$Tiles.remove_child(sibling)
 	else:
-		new_tile.position = grid_position * tile_size
 		$Tiles.add_child(new_tile)
-	instantiated_tiles[grid_position] = new_tile
+	new_tile.position = grid_position * tile_size
 	new_tile.set_tile(tile_name)
+	instantiated_tiles[grid_position] = new_tile
 	tile_positions.append(grid_position)
 
 func _ready():
@@ -63,13 +62,9 @@ func set_cells():
 	remove_all_tiles()
 	
 	add_row(Tile.TileNames.orange)
-	add_row(Tile.TileNames.orange, Tile.TileNames.coin, 2)
-	add_row(Tile.TileNames.tree, Tile.TileNames.door_closed, 1)
-	
-	# TODO
-	# coin behind wall
-	# row of 1-6 coins
-	# door open
+	add_row(Tile.TileNames.orange)
+	add_special_rows(0)
+
 	
 	#add_row(Tile.TileNames.orange)
 	#add_row(Tile.TileNames.road)
@@ -144,7 +139,7 @@ func set_player_position_to_grid_row(row: int):
 	player_start_position = to_global(Vector3i(range(0, grid_size_x - 1, 2).pick_random(), 1.5, row * tile_size))
 	
 func swap_tile(old_tile, new_tile):
-	create_tile(new_tile, old_tile.position, old_tile)
+	create_tile(new_tile, old_tile.position / 2, old_tile)
 
 func check_doors():
 	var first_closed_door = null
@@ -160,5 +155,40 @@ func check_doors():
 				return
 	swap_tile(first_closed_door, Tile.TileNames.door_open)
 	
+func add_special_rows(k):
+	match k:
+		0:
+			set_row_tiles_ordered([
+				Tile.TileNames.orange,
+				Tile.TileNames.tree,
+				Tile.TileNames.tree,
+				Tile.TileNames.tree,
+				Tile.TileNames.orange,
+				Tile.TileNames.tree,
+				])
+			set_row_tiles_ordered([
+				Tile.TileNames.coin,
+				Tile.TileNames.coin,
+				Tile.TileNames.coin,
+				Tile.TileNames.tree,
+				Tile.TileNames.door_closed,
+				Tile.TileNames.tree,
+				])
+			set_row_tiles_ordered([
+				Tile.TileNames.tree,
+				Tile.TileNames.tree,
+				Tile.TileNames.tree,
+				Tile.TileNames.tree,
+				Tile.TileNames.orange,
+				Tile.TileNames.tree,
+				])
+		_:
+			pass
 		
-		
+
+func set_row_tiles_ordered(tiles: Array[Tile.TileNames]):
+	var first_tile_columns: Array = range(grid_size_x)
+	for column in grid_size_x:
+		var tile_grid_coords := Vector3i(column, 0, current_furthest_row)
+		create_tile(tiles[column], tile_grid_coords)
+	current_furthest_row -= 1

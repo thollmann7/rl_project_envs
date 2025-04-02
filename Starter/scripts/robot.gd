@@ -29,8 +29,6 @@ func _ready():
 func _physics_process(delta):
 	# negative, bc we go towards negative z
 	if position.z < furthest_z_reached:
-		print("position: %s" % position.z)
-		print("furthest reached: %s" % furthest_z_reached)
 		furthest_z_reached = position.z
 		map.update_layout(furthest_z_reached / 2)
 	if _ai_controller.needs_reset:
@@ -62,12 +60,15 @@ func _process_movement(_delta):
 				tile.TileNames.tree:
 					# Push the robot back if it has moved to a tree tile
 					global_position -= (requested_movement * movement_step)
+				tile.TileNames.door_closed:
+					# Push the robot back if it has moved to a closed_door tile
+					print("moving onto closed door")
+					global_position -= (requested_movement * movement_step)
 				tile.TileNames.water:
 					# die if step in water
 					game_over(0)
 				tile.TileNames.coin:
 					# change coin to orange tile
-					tile.id = int(Tile.TileNames.orange)
 					map.swap_tile(tile, Tile.TileNames.orange)
 					map.check_doors()
 				# THIS IS THE GOAL STATE

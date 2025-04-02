@@ -31,3 +31,6 @@ car_scene = ExtResource("4_nsbp8")
 map = NodePath("../Map")
 car_manager = NodePath("../Cars")
 camera = NodePath("../Camera3D")
+
+[node name="dewbug_cam" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 20, -10)

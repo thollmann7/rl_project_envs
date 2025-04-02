@@ -22,20 +22,16 @@ var grid_size_x = 6
 ## Number of rows in the grid
 var current_furthest_row = 0
 var road_rows: Array[Vector2]
-var tiles_instantiated: bool = false
 
-const rows_behind_player = 3
+const rows_behind_player = 2
 const rows_infrontof_player = 6
 
 ## Removes all tile nodes on first launch (if any are added in the editor)
 ## and on subsequent calls, it hides all tiles
 func remove_all_tiles():
 	for tile in $Tiles.get_children():
-		if not tiles_instantiated:
-			tile.queue_free()
-		else:
-			tile.hide_all()
-			
+		$Tiles.remove_child(tile)
+	instantiated_tiles.clear()
 	tile_positions.clear()
 	road_rows.clear()
 	current_furthest_row = 0
@@ -57,30 +53,24 @@ func create_tile(tile_name: Tile.TileNames, grid_position: Vector3i):
 func _ready():
 	set_cells()
 
-## You can set the layout by adjusting each row with set_row_cells()
-## Note: Changing size after initial start is not supported
-## you can change the order or rows or how many of the second tiles to add
-## as long as the total size (number of rows, width) remains the same
 
 func set_cells():
 	remove_all_tiles()
-	#add_row(Tile.TileNames.orange, Tile.TileNames.goal, 1)
-	#add_row(Tile.TileNames.orange)
-	#add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
-	#add_row(Tile.TileNames.road)
-	#add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
-	#add_row(Tile.TileNames.orange)
-	#add_row(Tile.TileNames.orange)
 	
 	add_row(Tile.TileNames.orange)
+	add_row(Tile.TileNames.orange)
 	add_row(Tile.TileNames.road)
+	#add_row(Tile.TileNames.orange)
+	#add_row(Tile.TileNames.orange)
 	add_row(Tile.TileNames.orange)
-	add_row(Tile.TileNames.road, Tile.TileNames.orange, 0, 1)
 	add_row(Tile.TileNames.orange)
+	#add_row(Tile.TileNames.orange)
+	#add_row(Tile.TileNames.orange)
 	add_row(Tile.TileNames.road, Tile.TileNames.orange, 0, 2)
+	add_row(Tile.TileNames.orange)
+	add_row(Tile.TileNames.orange)
+	add_row(Tile.TileNames.orange)
 	set_player_position_to_grid_row(0)
-
-	tiles_instantiated = true
 	
 func reset():
 	if not is_node_ready():
@@ -119,7 +109,6 @@ func set_row_tiles(row: int, tile: Tile.TileNames, second_tile: Tile.TileNames =
 		car_manager.update_cars()
 
 func update_layout(furthest_row_reached):
-	print("updating rows")
 	# create new rows infront:
 	# we add 1, bc "current furthest" actually means "next to be instantiated"
 	while current_furthest_row + 1 > furthest_row_reached - rows_infrontof_player:
@@ -128,16 +117,14 @@ func update_layout(furthest_row_reached):
 	var update_roads = false
 	for tile in $Tiles.get_children():
 		if tile.position.z / 2 > furthest_row_reached + rows_behind_player:
-			print("update roads: %s" % update_roads)
 			if tile.id == int(Tile.TileNames.road):
-				print("road detected!")
 				update_roads = true
-			print("removing tile at %s" % (tile.position.z/2))
+			instantiated_tiles.erase(tile.position)
+			tile_positions.erase(tile.position)
 			$Tiles.remove_child(tile)
 		else:
 			break
 	if update_roads:
-		print("removing roads!")
 		road_rows.remove_at(0)
 		car_manager.update_cars()
 			
@@ -147,4 +134,4 @@ func add_row(tile: Tile.TileNames, second_tile: Tile.TileNames = Tile.TileNames.
 	current_furthest_row -= 1
 
 func set_player_position_to_grid_row(row: int):
-	player_start_position = to_global(Vector3i(range(0, grid_size_x - 1, 2).pick_random(), 0, row * tile_size))
+	player_start_position = to_global(Vector3i(range(0, grid_size_x - 1, 2).pick_random(), 1.5, row * tile_size))

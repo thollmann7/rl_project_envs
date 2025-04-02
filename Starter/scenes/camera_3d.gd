@@ -3,7 +3,7 @@ extends Camera3D
 @export var player : Player
 
 @onready var init_position = position
-var follow_distance = 5
+var follow_distance = 3
 
 
 func _process(delta: float) -> void:

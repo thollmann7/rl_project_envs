@@ -15,7 +15,6 @@ func _ready() -> void:
 
 
 func create_car(row_number, car_type : int):
-	print("creating car of type %s" % car_type)
 	var new_car = car_scene.instantiate()
 	new_car.row_number = row_number
 	new_car.car_type = car_type

@@ -29,6 +29,8 @@ func _ready():
 func _physics_process(delta):
 	# negative, bc we go towards negative z
 	if position.z < furthest_z_reached:
+		print("position: %s" % position.z)
+		print("furthest reached: %s" % furthest_z_reached)
 		furthest_z_reached = position.z
 		map.update_layout(furthest_z_reached / 2)
 	if _ai_controller.needs_reset:
@@ -96,6 +98,7 @@ func game_over(reward = 0.0):
 	reset()
 
 func reset():
+	print("RESET ALL")
 	last_dist_to_goal = null
 	furthest_z_reached = 0
 	# Order of resetting is important:
@@ -103,9 +106,9 @@ func reset():
 	# and the road segments (needed to know where to spawn the cars)
 	map.reset()
 	# after that, we can set the player position
-	global_position = Vector3(map.player_start_position) + Vector3.UP * 1.5
+	global_position = Vector3(map.player_start_position)
 	# and also reset or create (on first start) the cars
-	car_manager.update_cars()
+	#car_manager.update_cars()
 	# reset camera to initial position
 	camera.reset()
 

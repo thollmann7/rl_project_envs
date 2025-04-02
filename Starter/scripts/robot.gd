@@ -60,10 +60,11 @@ func _process_movement(_delta):
 		elif tile.id == tile.TileNames.tree:
 			# Push the robot back if it has moved to a tree tile
 			global_position -= (requested_movement * movement_step)
-		elif tile.id == tile.TileNames.goal:
+		# THIS IS THE GOAL STATE
+		#elif tile.id == tile.TileNames.goal:
 			# If a goal tile is reached, end episode with reward +1
-			game_over(1)
-			print_game_status("Success, reached goal")
+		#	game_over(1)
+		#	print_game_status("Success, reached goal")
 		else:
 			for car in car_manager.cars:
 				if get_grid_position() == map.get_grid_position(car.global_position):

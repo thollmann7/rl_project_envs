@@ -58,18 +58,8 @@ func set_cells():
 	remove_all_tiles()
 	
 	add_row(Tile.TileNames.orange)
-	add_row(Tile.TileNames.orange)
-	add_row(Tile.TileNames.road)
-	#add_row(Tile.TileNames.orange)
-	#add_row(Tile.TileNames.orange)
-	add_row(Tile.TileNames.orange)
-	add_row(Tile.TileNames.orange)
-	#add_row(Tile.TileNames.orange)
-	#add_row(Tile.TileNames.orange)
-	add_row(Tile.TileNames.road, Tile.TileNames.orange, 0, 2)
-	add_row(Tile.TileNames.orange)
-	add_row(Tile.TileNames.orange)
-	add_row(Tile.TileNames.orange)
+	add_row(Tile.TileNames.door_open)
+	add_row(Tile.TileNames.door_closed)
 	set_player_position_to_grid_row(0)
 	
 func reset():
@@ -101,8 +91,6 @@ func set_row_tiles(row: int, tile: Tile.TileNames, second_tile: Tile.TileNames =
 			tile_to_create = second_tile
 		var tile_grid_coords := Vector3i(column, 0, row)
 		create_tile(tile_to_create, tile_grid_coords)
-		if tile_to_create == Tile.TileNames.goal:
-			goal_position = tile_grid_coords
 		
 	if tile == Tile.TileNames.road:
 		road_rows.append(Vector2(row, tile_type))

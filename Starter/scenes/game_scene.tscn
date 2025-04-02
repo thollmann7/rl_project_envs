@@ -15,9 +15,10 @@ size = 12.748
 script = ExtResource("1_rurhu")
 player = NodePath("../Robot")
 
-[node name="Map" type="Node3D" parent="."]
+[node name="Map" type="Node3D" parent="." node_paths=PackedStringArray("car_manager")]
 script = ExtResource("4_lrlqi")
 tile = ExtResource("2_ltmsi")
+car_manager = NodePath("../Cars")
 
 [node name="Tiles" type="Node3D" parent="Map"]
 

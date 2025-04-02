@@ -97,7 +97,7 @@ func reset():
 	# after that, we can set the player position
 	global_position = Vector3(map.player_start_position) + Vector3.UP * 1.5
 	# and also reset or create (on first start) the cars
-	car_manager.reset()
+	car_manager.update_cars()
 
 func print_game_status(message: String):
 	if print_game_status_enabled:

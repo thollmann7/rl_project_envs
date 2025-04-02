@@ -5,6 +5,8 @@ class_name Car
 ## and changes direction once left or right edge is reached
 
 #region Initialized by car manager
+var row_number: int
+var car_type: int
 var step_size: int
 var left_edge_x: int
 var right_edge_x: int

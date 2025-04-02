@@ -2,6 +2,7 @@ extends Node3D
 class_name Map
 
 @export var tile: PackedScene
+@export var car_manager : CarManager
 
 # Grid positions
 var instantiated_tiles: Dictionary
@@ -21,7 +22,7 @@ var grid_size_x = 6
 ## Number of rows in the grid
 var grid_size_z = 0
 
-var road_rows: Array[int]
+var road_rows: Array[Vector2]
 
 var tiles_instantiated: bool = false
 
@@ -72,9 +73,12 @@ func set_cells():
 	#add_row(Tile.TileNames.orange)
 	
 	add_row(Tile.TileNames.orange)
-	add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
-	add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
-	
+	add_row(Tile.TileNames.orange)
+	add_row(Tile.TileNames.orange)
+	add_row(Tile.TileNames.road)
+	#add_row(Tile.TileNames.road, Tile.TileNames.orange, 0, 1)
+	#add_row(Tile.TileNames.road, Tile.TileNames.orange, 0, 2)
+	#add_row(Tile.TileNames.road, Tile.TileNames.orange, 0, 3)
 	set_player_position_to_grid_row(0)
 
 	tiles_instantiated = true
@@ -94,7 +98,7 @@ func get_grid_position(global_pos: Vector3i):
 	var grid_pos = Vector3i(to_local(global_pos) / 2.0)
 	return grid_pos
 	
-func set_row_tiles(row: int, tile: Tile.TileNames, second_tile: Tile.TileNames = Tile.TileNames.orange, second_tile_count: int = 0):
+func set_row_tiles(row: int, tile: Tile.TileNames, second_tile: Tile.TileNames = Tile.TileNames.orange, second_tile_count: int = 0, tile_type: int = 0):
 	var first_tile_columns: Array = range(grid_size_x)
 	 
 	if second_tile_count:
@@ -113,10 +117,11 @@ func set_row_tiles(row: int, tile: Tile.TileNames, second_tile: Tile.TileNames =
 			goal_position = tile_grid_coords
 		
 	if tile == Tile.TileNames.road:
-		road_rows.append(row)
+		road_rows.append(Vector2(row, tile_type))
+		car_manager.update_cars()
 
-func add_row(tile: Tile.TileNames, second_tile: Tile.TileNames = Tile.TileNames.orange, second_tile_count: int = 0):
-	set_row_tiles(grid_size_z, tile, second_tile, second_tile_count)
+func add_row(tile: Tile.TileNames, second_tile: Tile.TileNames = Tile.TileNames.orange, second_tile_count: int = 0, tile_type: int = 0):
+	set_row_tiles(grid_size_z, tile, second_tile, second_tile_count, tile_type)
 	grid_size_z -= 1
 
 func set_player_position_to_grid_row(row: int):

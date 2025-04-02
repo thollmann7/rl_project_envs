@@ -11,38 +11,41 @@ var car_right_edge_x: int
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	for road_row_idx in map.road_rows.size():
-		create_car()
-	reset()
+	pass
 
 
-func create_car():
-		var new_car = car_scene.instantiate()
-		add_child(new_car)
-		cars.append(new_car)
+func create_car(row_number, car_type):
+	var new_car = car_scene.instantiate()
+	new_car.row_number = row_number
+	new_car.car_type = car_type
+	# type 0:
+	new_car.left_edge_x = 0
+	new_car.right_edge_x = (map.grid_size_x - 1) * map.tile_size
+	new_car.step_size = map.tile_size
+	
+	new_car.position.x = range(new_car.left_edge_x + 2, new_car.right_edge_x - 2, 2).pick_random()
+	new_car.position.y = map.tile_size / 2 + 0.75 # 0.75 is to make the bottom of the car be at road height
+	new_car.position.z = row_number * 2
 
-
-func reset():
-	# If there are more cars than the current map layout road rows, remove 
-	# the extra cars
-	while cars.size() > map.road_rows.size():
-		cars[cars.size() - 1].queue_free()
-		cars.remove_at(cars.size() - 1)
+	new_car.current_direction = 1 if randi_range(0, 1) == 0 else -1
+	
+	add_child(new_car)
+	cars.append(new_car)
 		
-	# If there are less cars than the current map layout road rows,
-	# add more cars
-	while cars.size() < map.road_rows.size():
-		create_car()
-
-	# Set car edge positions (at which they turn), position and other properties
-	for car_id in cars.size():
-		var car = cars[car_id]
-		car.left_edge_x = 0
-		car.right_edge_x = (map.grid_size_x - 1) * map.tile_size
-		car.step_size = map.tile_size
-		
-		car.position.x = range(car.left_edge_x + 2, car.right_edge_x - 2, 2).pick_random()
-		car.position.y = map.tile_size / 2 + 0.75 # 0.75 is to make the bottom of the car be at road height
-		car.position.z = map.road_rows[car_id] * 2
-
-		car.current_direction = 1 if randi_range(0, 1) == 0 else -1
+func update_cars():
+	print(cars)
+	# remove cars that don't belong to any row (bc it got deleted)
+	for car in cars:
+		# we use 'greater than' bc we go towards negative z with higher rows
+		if car.row_number > map.road_rows[0].x:
+			remove_child(car)
+			cars = get_children()
+	# add cars to empty rows
+	for road_row in map.road_rows:
+		var has_car = false
+		for car in cars:
+			if road_row.x == car.row_number:
+				has_car = true
+				break
+		if not has_car:
+			create_car(road_row.x, road_row.y)

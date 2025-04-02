@@ -60,6 +60,9 @@ func _process_movement(_delta):
 		elif tile.id == tile.TileNames.tree:
 			# Push the robot back if it has moved to a tree tile
 			global_position -= (requested_movement * movement_step)
+		elif tile.id == tile.TileNames.water:
+			# die if step in water
+			game_over(0)
 		# THIS IS THE GOAL STATE
 		#elif tile.id == tile.TileNames.goal:
 			# If a goal tile is reached, end episode with reward +1

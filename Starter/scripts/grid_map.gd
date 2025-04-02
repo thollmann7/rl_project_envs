@@ -58,8 +58,19 @@ func set_cells():
 	remove_all_tiles()
 	
 	add_row(Tile.TileNames.orange)
-	add_row(Tile.TileNames.door_open)
-	add_row(Tile.TileNames.door_closed)
+	add_row(Tile.TileNames.orange, Tile.TileNames.water, 2)
+	add_row(Tile.TileNames.orange, Tile.TileNames.water, 2)
+	add_row(Tile.TileNames.orange, Tile.TileNames.water, 2)
+	add_row(Tile.TileNames.orange, Tile.TileNames.water, 2)
+	
+	#add_row(Tile.TileNames.orange)
+	#add_row(Tile.TileNames.road)
+	#add_row(Tile.TileNames.tree)
+	#add_row(Tile.TileNames.coin)
+	#add_row(Tile.TileNames.bridge)
+	#add_row(Tile.TileNames.water)
+	#add_row(Tile.TileNames.door_closed)
+	#add_row(Tile.TileNames.door_open)
 	set_player_position_to_grid_row(0)
 	
 func reset():

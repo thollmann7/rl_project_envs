@@ -37,7 +37,10 @@ func update_cars():
 	# remove cars that don't belong to any row (bc it got deleted)
 	for car in cars:
 		# we use 'greater than' bc we go towards negative z with higher rows
-		if car.row_number > map.road_rows[0].x:
+		var lowest_road_row = null
+		if map.road_rows.size() > 0:
+			lowest_road_row = map.road_rows[0].x
+		if lowest_road_row == null or car.row_number > lowest_road_row:
 			remove_child(car)
 			cars = get_children()
 	# add cars to empty rows

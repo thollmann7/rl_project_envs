@@ -74,6 +74,10 @@ func set_cells():
 	
 	add_row(Tile.TileNames.orange)
 	add_row(Tile.TileNames.road)
+	add_row(Tile.TileNames.orange)
+	add_row(Tile.TileNames.road)
+	add_row(Tile.TileNames.orange)
+	add_row(Tile.TileNames.road)
 	#add_row(Tile.TileNames.road, Tile.TileNames.orange, 0, 1)
 	#add_row(Tile.TileNames.road, Tile.TileNames.orange, 0, 2)
 	#add_row(Tile.TileNames.road, Tile.TileNames.orange, 0, 3)
@@ -118,12 +122,28 @@ func set_row_tiles(row: int, tile: Tile.TileNames, second_tile: Tile.TileNames =
 		car_manager.update_cars()
 
 func update_layout(furthest_row_reached):
-	print("update")
+	print("updating rows")
 	# create new rows infront:
-	# we add 1, as "current furthest" actually means next to be instantiated
+	# we add 1, bc "current furthest" actually means "next to be instantiated"
 	while current_furthest_row + 1 > furthest_row_reached - rows_infrontof_player:
 		add_row(Tile.TileNames.orange)
-	
+	# delete rows behind:
+	var update_roads = false
+	for tile in $Tiles.get_children():
+		if tile.position.z / 2 > furthest_row_reached + rows_behind_player:
+			print("update roads: %s" % update_roads)
+			if tile.id == int(Tile.TileNames.road):
+				print("road detected!")
+				update_roads = true
+			print("removing tile at %s" % (tile.position.z/2))
+			$Tiles.remove_child(tile)
+		else:
+			break
+	if update_roads:
+		print("removing roads!")
+		road_rows.remove_at(0)
+		car_manager.update_cars()
+			
 
 func add_row(tile: Tile.TileNames, second_tile: Tile.TileNames = Tile.TileNames.orange, second_tile_count: int = 0, tile_type: int = 0):
 	set_row_tiles(current_furthest_row, tile, second_tile, second_tile_count, tile_type)

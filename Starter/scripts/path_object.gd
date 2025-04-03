@@ -3,7 +3,7 @@ class_name PathObject
 
 ## Platform, moves along x or z axis,
 ## and changes direction once an edge is reached
-## IMPORTANT:
+## 
 ## the edges HAVE to be a square or a line!
 
 #region Initialized by platform manager
@@ -26,7 +26,7 @@ func _physics_process(_delta: float) -> void:
 	# if on a corner, update next corner (and turn if car)
 	if position == corners[next_corner_index]:
 		next_corner_index = (next_corner_index + 1) % corners.size()
-		if is_car:
+		if is_car and corners.size() == 4:
 			rotate_y(PI/2)
 	# move towards next corner
 	position = position.move_toward(corners[next_corner_index], 2)

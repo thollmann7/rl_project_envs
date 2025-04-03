@@ -24,7 +24,7 @@ glow_enabled = true
 script = ExtResource("2_5kbv3")
 control_mode = 0
 action_repeat = 1
-speed_up = 0.1
+speed_up = 0.05
 onnx_model_path = "model.onnx"
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]

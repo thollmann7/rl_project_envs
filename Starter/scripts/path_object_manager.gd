@@ -5,7 +5,8 @@ class_name PathObjectManager
 @export var car_scene: PackedScene
 @export var platform_scene: PackedScene
 
-@onready var path_objects: Array[Node] = get_children()
+var cars: Array[Node] 
+var platforms: Array[Node]
 
 # path_objects are explicitly instantiated and removed
 
@@ -26,7 +27,7 @@ func create_path_object(corners, path_object_type : int):
 	for corner in corners:
 		if corner.z < min_z:
 			min_z = corner.z
-	new_path_object.remove_on_row_deletion = min_z
+	new_path_object.remove_on_row_deletion = min_z / 2
 	
 	# find random spawn point:
 	var random_index = range(0, corners.size()).pick_random()
@@ -51,8 +52,13 @@ func create_path_object(corners, path_object_type : int):
 			).pick_random()
 		if new_path_object.is_car:
 			new_path_object.rotate_y(PI/2)
-	new_path_object.position.y = map.tile_size / 2 + 0.75 # 0.75 is to make the bottom of the car be at road height
+	new_path_object.position.y = 0
 	new_path_object.next_corner_index = (random_index + 1) % corners.size()
 			
 	add_child(new_path_object)
-	path_objects.append(new_path_object)
+	
+	match path_object_type:
+		0:
+			cars.append(new_path_object)
+		1:
+			platforms.append(new_path_object)

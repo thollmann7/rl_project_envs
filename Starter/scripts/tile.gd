@@ -9,6 +9,7 @@ class_name Tile
 enum TileNames {
 	orange,
 	road,
+	road2,
 	tree,
 	water,
 	coin,

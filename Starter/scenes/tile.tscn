@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://crui8soua8lj2"]
+[gd_scene load_steps=9 format=3 uid="uid://crui8soua8lj2"]
 
 [ext_resource type="Script" uid="uid://cppppsb1qp3ka" path="res://scripts/tile.gd" id="1_xode2"]
 [ext_resource type="PackedScene" uid="uid://d2vl6r88cwga1" path="res://assets/road_tile.glb" id="2_c5l1q"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dmvk5tu03vfwe" path="res://assets/water_tile.glb" id="5_6p3j2"]
 [ext_resource type="PackedScene" uid="uid://c3a2synxf2nym" path="res://assets/coin.glb" id="6_284l3"]
 [ext_resource type="PackedScene" uid="uid://7jsgkgft3qhq" path="res://assets/door_closed.glb" id="7_j3iir"]
+[ext_resource type="PackedScene" uid="uid://dadkja4tascev" path="res://assets/road_tile2.glb" id="8_284l3"]
 
 [node name="Tile" type="Node3D"]
 script = ExtResource("1_xode2")
@@ -14,6 +15,8 @@ script = ExtResource("1_xode2")
 [node name="orange_tile" parent="." instance=ExtResource("3_rlmbm")]
 
 [node name="road_tile" parent="." instance=ExtResource("2_c5l1q")]
+
+[node name="road_tile2" parent="." instance=ExtResource("8_284l3")]
 
 [node name="tree_tile" parent="." instance=ExtResource("4_p4mpm")]
 

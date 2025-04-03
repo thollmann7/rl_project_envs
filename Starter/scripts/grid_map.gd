@@ -37,6 +37,8 @@ func remove_all_tiles():
 	current_furthest_row = 0
 	for child in path_object_manager.get_children():
 		child.queue_free()
+	path_object_manager.cars.clear()
+	path_object_manager.platforms.clear()
 
 ## Adds a tile to the grid, takes a scene containing the tile and grid position
 func create_tile(tile_name: Tile.TileNames, grid_position: Vector3i, sibling: Tile = null):

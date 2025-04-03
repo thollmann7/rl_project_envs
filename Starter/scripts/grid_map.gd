@@ -3,6 +3,7 @@ class_name Map
 
 @export var tile: PackedScene
 @export var car_manager : CarManager
+@export var path_object_manager : PathObjectManager
 
 # Grid positions
 var instantiated_tiles: Dictionary
@@ -54,16 +55,13 @@ func create_tile(tile_name: Tile.TileNames, grid_position: Vector3i, sibling: Ti
 	instantiated_tiles[grid_position] = new_tile
 	tile_positions.append(grid_position)
 
-func _ready():
-	set_cells()
-
 
 func set_cells():
 	remove_all_tiles()
 	
 	add_row(Tile.TileNames.orange)
 	add_row(Tile.TileNames.orange)
-	add_special_rows(3)
+	add_special_rows(4)
 	add_row(Tile.TileNames.orange)
 	
 	#add_row(Tile.TileNames.orange)
@@ -202,6 +200,8 @@ func add_special_rows(k):
 		3:
 			# small maze (between 3 and 7 rows)
 			_create_maze(range(2, 5).pick_random())
+		4:
+			_create_platform()
 		_:
 			pass
 
@@ -234,3 +234,13 @@ func _create_bridge(bridge):
 			else:
 				tile_array.append(Tile.TileNames.water)
 	return tile_array
+	
+func _create_platform():
+	var corners = [
+		Vector3(0, 0, 2),
+		Vector3(6, 0, 2),
+		Vector3(6, 0, 4),
+		Vector3(0, 0, 4),
+	]
+	path_object_manager.create_path_object(corners, 0)
+	

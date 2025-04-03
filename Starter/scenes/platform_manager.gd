@@ -29,8 +29,6 @@ func create_platform(row_number, platform_type : int):
 	add_child(new_platform)
 	platforms.append(new_platform)
 
-func remove_platform():
-	
 
 func update_platforms():
 	# remove cars that don't belong to any row (bc it got deleted)

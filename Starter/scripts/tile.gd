@@ -9,12 +9,12 @@ class_name Tile
 enum TileNames {
 	orange,
 	road,
+	road2,
 	tree,
 	water,
 	coin,
 	door_closed,
 	door_open,
-	bridge,
 }
 
 ## ID of the current set tile

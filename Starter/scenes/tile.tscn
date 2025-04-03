@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dmvk5tu03vfwe" path="res://assets/water_tile.glb" id="5_6p3j2"]
 [ext_resource type="PackedScene" uid="uid://c3a2synxf2nym" path="res://assets/coin.glb" id="6_284l3"]
 [ext_resource type="PackedScene" uid="uid://7jsgkgft3qhq" path="res://assets/door_closed.glb" id="7_j3iir"]
-[ext_resource type="PackedScene" uid="uid://ce5gipljfbp28" path="res://assets/bridge.glb" id="8_j8k5k"]
+[ext_resource type="PackedScene" uid="uid://dadkja4tascev" path="res://assets/road_tile2.glb" id="8_284l3"]
 
 [node name="Tile" type="Node3D"]
 script = ExtResource("1_xode2")
@@ -16,9 +16,12 @@ script = ExtResource("1_xode2")
 
 [node name="road_tile" parent="." instance=ExtResource("2_c5l1q")]
 
+[node name="road_tile2" parent="." instance=ExtResource("8_284l3")]
+
 [node name="tree_tile" parent="." instance=ExtResource("4_p4mpm")]
 
 [node name="water_tile" parent="." instance=ExtResource("5_6p3j2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
 
 [node name="coin" parent="." instance=ExtResource("6_284l3")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
@@ -28,6 +31,3 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 
 
 [node name="door_open" parent="." instance=ExtResource("7_j3iir")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
-
-[node name="bridge" parent="." instance=ExtResource("8_j8k5k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

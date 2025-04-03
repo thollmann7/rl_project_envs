@@ -10,9 +10,6 @@
 
 [node name="GameScene" type="Node3D"]
 
-[node name="debug_cam" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 30, -10)
-
 [node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("player")]
 transform = Transform3D(1, 0, 0, 0, 0.422618, 0.906308, 0, -0.906308, 0.422618, 5, 10, 5)
 size = 12.748
@@ -36,3 +33,6 @@ platform_scene = ExtResource("9_utbpp")
 map = NodePath("../Map")
 camera = NodePath("../Camera3D")
 path_object_manager = NodePath("../PathObjects")
+
+[node name="debug_cam" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 30, -10)

@@ -29,7 +29,7 @@ func _ready():
 	reset()
 
 func _physics_process(delta):
-	# negative, bc we go towards negative z
+	# negative, bc we go towards negative zw
 	if position.z < furthest_z_reached:
 		furthest_z_reached = position.z
 		map.update_layout(furthest_z_reached / 2)
@@ -46,8 +46,8 @@ func _process_movement(_delta):
 			print_game_status("Failed, hit car while standing")
 
 	if requested_movement:
-		if not on_platform == null:
-			on_platform = null
+		if map.instantiated_tiles.size() != map.tile_positions.size():
+			map.print_map()
 		# Move the robot to the requested position
 		global_position += (requested_movement * movement_step)
 		# Update the visual rotation of the robot to look toward the direction of last requested movement
@@ -55,18 +55,19 @@ func _process_movement(_delta):
 		
 		var grid_position: Vector3i = get_grid_position()
 		var tile: Tile = map.get_tile(grid_position)
-		
+				
 		if not tile:
 			# Push the robot back if there's no tile to move to (out of map boundary)
 			global_position -= (requested_movement * movement_step)
 		else:
+			if not on_platform == null:
+				on_platform = null
 			match tile.id:
 				tile.TileNames.tree:
 					# Push the robot back if it has moved to a tree tile
 					global_position -= (requested_movement * movement_step)
 				tile.TileNames.door_closed:
 					# Push the robot back if it has moved to a closed_door tile
-					print("moving onto closed door")
 					global_position -= (requested_movement * movement_step)
 				tile.TileNames.water:
 					for platform in path_object_manager.platforms:

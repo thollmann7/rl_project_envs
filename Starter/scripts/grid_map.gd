@@ -25,6 +25,8 @@ var current_furthest_row = 0
 const rows_behind_player = 2
 const rows_infrontof_player = 6
 
+var rng = RandomNumberGenerator.new()
+
 ## Removes all tile nodes on first launch (if any are added in the editor)
 ## and on subsequent calls, it hides all tiles
 func remove_all_tiles():
@@ -51,28 +53,20 @@ func create_tile(tile_name: Tile.TileNames, grid_position: Vector3i, sibling: Ti
 		$Tiles.add_child(new_tile)
 	new_tile.position = grid_position * tile_size
 	new_tile.set_tile(tile_name)
-	instantiated_tiles[grid_position] = new_tile
-	tile_positions.append(grid_position)
+	instantiated_tiles[Vector3i(grid_position)] = new_tile
+	if not grid_position in tile_positions:
+		tile_positions.append(grid_position)
 
 
 func set_cells():
 	remove_all_tiles()
 	
 	add_row(Tile.TileNames.orange)
-	add_special_rows(5)
+	add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
+	add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
 	add_row(Tile.TileNames.orange)
-	add_special_rows(5)
-	add_row(Tile.TileNames.orange)
-	add_special_rows(5)
-	
-	#add_row(Tile.TileNames.orange)
-	#add_row(Tile.TileNames.road)
-	#add_row(Tile.TileNames.tree)
-	#add_row(Tile.TileNames.coin)
-	#add_row(Tile.TileNames.bridge)
-	#add_row(Tile.TileNames.water)
-	#add_row(Tile.TileNames.door_closed)
-	#add_row(Tile.TileNames.door_open)
+	while current_furthest_row >= -rows_infrontof_player:
+		create_random_row()
 	set_player_position_to_grid_row(0)
 	
 func reset():
@@ -83,7 +77,7 @@ func reset():
 func get_tile(grid_pos: Vector3i):
 	if not grid_pos in tile_positions:
 		return null
-	return instantiated_tiles[grid_pos]
+	return instantiated_tiles[Vector3i(grid_pos)]
 
 func get_grid_position(global_pos: Vector3i):
 	var grid_pos = Vector3i(to_local(global_pos) / 2.0)
@@ -109,12 +103,12 @@ func update_layout(furthest_row_reached):
 	# create new rows infront:
 	# we add 1, bc "current furthest" actually means "next to be instantiated"
 	while current_furthest_row + 1 > furthest_row_reached - rows_infrontof_player:
-		add_row(Tile.TileNames.orange)
+		create_random_row()
 	# delete rows behind:
 	for tile in $Tiles.get_children():
 		if tile.position.z / 2 > furthest_row_reached + rows_behind_player:
-			instantiated_tiles.erase(tile.position)
-			tile_positions.erase(tile.position)
+			instantiated_tiles.erase(Vector3i(tile.position / 2))
+			tile_positions.erase(Vector3i(tile.position / 2))
 			$Tiles.remove_child(tile)
 		else:
 			break
@@ -122,6 +116,9 @@ func update_layout(furthest_row_reached):
 	for path_object in path_object_manager.get_children():
 		if path_object.remove_on_row_deletion > furthest_row_reached + rows_behind_player:
 			path_object_manager.remove_child(path_object)
+			path_object_manager.cars.erase(path_object)
+			path_object_manager.platforms.erase(path_object)
+		
 		
 
 func add_row(tile: Tile.TileNames, second_tile: Tile.TileNames = Tile.TileNames.orange, second_tile_count: int = 0, tile_type: int = 0):
@@ -129,7 +126,7 @@ func add_row(tile: Tile.TileNames, second_tile: Tile.TileNames = Tile.TileNames.
 	current_furthest_row -= 1
 
 func set_player_position_to_grid_row(row: int):
-	player_start_position = to_global(Vector3i(range(0, grid_size_x - 1, 2).pick_random(), 1.5, row * tile_size))
+	player_start_position = to_global(Vector3i(rng.randi_range(0, grid_size_x - 1) * 2, 1.5, row * tile_size))
 	
 func swap_tile(old_tile, new_tile):
 	create_tile(new_tile, old_tile.position / 2, old_tile)
@@ -155,6 +152,45 @@ func set_row_tiles_ordered(tiles):
 		var tile_grid_coords := Vector3i(column, 0, current_furthest_row)
 		create_tile(tiles[column], tile_grid_coords)
 	current_furthest_row -= 1
+	
+func create_random_row():
+	var row_to_create: int
+	if current_furthest_row > -20:
+		# trees, water-holes and road
+		row_to_create = rng.randi_range(0, 4)
+	elif current_furthest_row > -40:
+		# add maze
+		row_to_create = rng.randi_range(0, 5)
+	elif current_furthest_row > -60:
+		# add coins
+		row_to_create = rng.randi_range(0, 7)
+	else:
+		# add river platform
+		row_to_create = rng.randi_range(0, 8)
+		
+	match row_to_create:
+		0: # 2 rows of trees
+			add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
+			add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
+		1: # 2 rows of water-holes
+			add_row(Tile.TileNames.orange, Tile.TileNames.water, 2)
+			add_row(Tile.TileNames.orange, Tile.TileNames.water, 2)
+		2: # create road
+			add_special_rows(4)
+		3: # create road
+			add_special_rows(4)
+		4: # 1 row of water with a 1-tile-bridge
+			add_row(Tile.TileNames.orange, Tile.TileNames.water, grid_size_x-1)
+		5: # maze
+			add_special_rows(2)
+		6:# coins behind wall
+			add_special_rows(0)
+		7: # 1-5 coins infront of door
+			add_special_rows(1)
+		8: # create river with moving platform
+			add_special_rows(3)
+	add_row(Tile.TileNames.orange)
+	
 	
 func add_special_rows(k):
 	match k:
@@ -184,17 +220,14 @@ func add_special_rows(k):
 				Tile.TileNames.tree,
 				])
 		1: # 1-5 coins infront of door
-			add_row(Tile.TileNames.orange, Tile.TileNames.coin, range(1, grid_size_x + 1).pick_random())
+			add_row(Tile.TileNames.orange, Tile.TileNames.coin, rng.randi_range(1, grid_size_x))
 			add_row(Tile.TileNames.tree, Tile.TileNames.door_closed, 1)
-		2: # 2 rows of road
-			add_row(Tile.TileNames.road)
-			add_row(Tile.TileNames.road)
-		3: # small maze (between 3 and 7 rows)
-			_create_maze(range(10, 11).pick_random())
-		4: # create river with moving platform
-			_create_platform(range(0, 3).pick_random())
-		5: # create circular road
-			_create_road(range(0, 3).pick_random())
+		2: # small maze (between 3 and 7 rows)
+			_create_maze(rng.randi_range(2, 4))
+		3: # create river with moving platform
+			_create_platform(rng.randi_range(0, 2))
+		4: # create circular road
+			_create_road(rng.randi_range(0, 2))
 		_:
 			pass
 
@@ -207,7 +240,7 @@ func _create_maze(size: int):
 		size = 2
 	var entrypoints = []
 	for i in size:
-		entrypoints.append(range(0, grid_size_x).pick_random())
+		entrypoints.append(rng.randi_range(0, grid_size_x - 1))
 	# create entry row
 	var previous = null
 	for entrypoint in entrypoints:
@@ -229,7 +262,6 @@ func _create_mixed_row(type1 : Tile.TileNames, type2 : Tile.TileNames, type1_ind
 	return tile_array
 	
 func _create_road(type : int):
-	type = 2
 	match type:
 		0: # one road
 			_create_path_object(
@@ -253,7 +285,7 @@ func _create_road(type : int):
 			)
 			add_row(Tile.TileNames.road)
 		2: # move in a circle
-			var length = range(2, 4).pick_random()
+			var length = rng.randi_range(1, 3)
 			_create_path_object(
 				0,
 				Vector3(0, 0, current_furthest_row * 2),
@@ -268,8 +300,8 @@ func _create_platform(type : int):
 	match type:
 		0: # move on x axis
 			# create water
-			var startpoint = range(0, grid_size_x).pick_random()
-			var endpoint = range(0, grid_size_x).pick_random()
+			var startpoint = rng.randi_range(0, grid_size_x - 1)
+			var endpoint = rng.randi_range(0, grid_size_x - 1)
 			set_row_tiles_ordered(_create_mixed_row(Tile.TileNames.orange, Tile.TileNames.water, [startpoint]))
 			_create_path_object(
 				1,
@@ -280,8 +312,8 @@ func _create_platform(type : int):
 			set_row_tiles_ordered(_create_mixed_row(Tile.TileNames.orange, Tile.TileNames.water, [endpoint]))
 		1: # move on z axis
 			# create water
-			var startpoint = range(0, grid_size_x).pick_random()
-			var length = range(3, 5).pick_random()
+			var startpoint = rng.randi_range(0, grid_size_x - 1)
+			var length = rng.randi_range(3, 4)
 			_create_path_object(
 				1,
 				Vector3(startpoint * 2, 0, current_furthest_row * 2),
@@ -292,9 +324,9 @@ func _create_platform(type : int):
 
 		2: # move in circle
 			# create water
-			var startpoint = range(0, grid_size_x).pick_random()
-			var endpoint = range(0, grid_size_x).pick_random()
-			var length = range(2, 4).pick_random()
+			var startpoint = rng.randi_range(0, grid_size_x - 1)
+			var endpoint = rng.randi_range(0, grid_size_x - 1)
+			var length = rng.randi_range(2, 3)
 			set_row_tiles_ordered(_create_mixed_row(Tile.TileNames.orange, Tile.TileNames.water, [startpoint]))
 			_create_path_object(
 				1,
@@ -319,3 +351,10 @@ func _create_path_object(type : int, bottomleft : Vector3, topright : Vector3):
 		corners.append(Vector3(bottomleft.x, 0, topright.z))
 	path_object_manager.create_path_object(corners, type)
 	
+func print_map():
+	for key in instantiated_tiles.keys():
+		print("%s: %s" % [key, instantiated_tiles[key].id])
+	print("---")
+	for p in tile_positions:
+		print(p)
+	print("-------------------------------------------")

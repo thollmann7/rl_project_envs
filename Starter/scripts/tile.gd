@@ -14,7 +14,6 @@ enum TileNames {
 	coin,
 	door_closed,
 	door_open,
-	bridge,
 }
 
 ## ID of the current set tile

@@ -4,14 +4,7 @@ class_name CarManager
 @export var map: Map
 @export var car_scene: PackedScene
 
-var car_left_edge_x: int
-var car_right_edge_x: int
-
 @onready var cars: Array[Node] = get_children()
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass
 
 
 func create_car(row_number, car_type : int):

@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://d2xhm7s3o8a31"]
+
+[ext_resource type="Script" uid="uid://h237h8jsypwr" path="res://platform.gd" id="1_mi635"]
+[ext_resource type="PackedScene" uid="uid://ce5gipljfbp28" path="res://assets/platform.glb" id="2_s8bxr"]
+
+[node name="Platform" type="Node3D"]
+script = ExtResource("1_mi635")
+
+[node name="platform" parent="." instance=ExtResource("2_s8bxr")]

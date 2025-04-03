@@ -63,8 +63,8 @@ func set_cells():
 	
 	add_row(Tile.TileNames.orange)
 	add_row(Tile.TileNames.orange)
-	add_special_rows(0)
-
+	add_special_rows(3)
+	add_row(Tile.TileNames.orange)
 	
 	#add_row(Tile.TileNames.orange)
 	#add_row(Tile.TileNames.road)
@@ -155,9 +155,18 @@ func check_doors():
 				return
 	swap_tile(first_closed_door, Tile.TileNames.door_open)
 	
+
+func set_row_tiles_ordered(tiles):
+	var first_tile_columns: Array = range(grid_size_x)
+	for column in grid_size_x:
+		var tile_grid_coords := Vector3i(column, 0, current_furthest_row)
+		create_tile(tiles[column], tile_grid_coords)
+	current_furthest_row -= 1
+	
 func add_special_rows(k):
 	match k:
 		0:
+			# coins behind wall
 			set_row_tiles_ordered([
 				Tile.TileNames.orange,
 				Tile.TileNames.tree,
@@ -182,13 +191,46 @@ func add_special_rows(k):
 				Tile.TileNames.orange,
 				Tile.TileNames.tree,
 				])
+		1:
+			# 1-5 coins infront of door
+			add_row(Tile.TileNames.orange, Tile.TileNames.coin, range(1, grid_size_x + 1).pick_random())
+			add_row(Tile.TileNames.tree, Tile.TileNames.door_closed, 1)
+		2:
+			# 2 rows of road
+			add_row(Tile.TileNames.road)
+			add_row(Tile.TileNames.road)
+		3:
+			# small maze (between 3 and 7 rows)
+			_create_maze(range(2, 5).pick_random())
 		_:
 			pass
-		
 
-func set_row_tiles_ordered(tiles: Array[Tile.TileNames]):
-	var first_tile_columns: Array = range(grid_size_x)
-	for column in grid_size_x:
-		var tile_grid_coords := Vector3i(column, 0, current_furthest_row)
-		create_tile(tiles[column], tile_grid_coords)
-	current_furthest_row -= 1
+func _create_maze(size: int):
+	# size is the number of entrypoints (single-tile-rows).
+	# between each two entrypoints there is a bridge, meaning that the total
+	# number of rows will be size * 2 - 1
+	# minimum size is 2 (= 3 rows)
+	if size < 2:
+		size = 2
+	var entrypoints = []
+	for i in size:
+		entrypoints.append(range(0, grid_size_x).pick_random())
+	# create entry row
+	var previous = null
+	for entrypoint in entrypoints:
+		if not previous == null:
+			var start_point = min(previous, entrypoint)
+			var end_point = max(previous, entrypoint)
+			var bridge = range(start_point, end_point + 1)
+			set_row_tiles_ordered(_create_bridge(bridge))
+		previous = entrypoint
+		set_row_tiles_ordered(_create_bridge([entrypoint]))
+	
+func _create_bridge(bridge):
+	var tile_array = []
+	for i in range(grid_size_x):
+			if i in bridge:
+				tile_array.append(Tile.TileNames.orange)
+			else:
+				tile_array.append(Tile.TileNames.water)
+	return tile_array

@@ -67,7 +67,7 @@ func set_cells():
 	add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
 	add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
 	add_row(Tile.TileNames.orange)
-	add_special_rows(0)
+	
 	while current_furthest_row >= -rows_infrontof_player:
 		create_random_row()
 	set_player_position_to_grid_row(0)

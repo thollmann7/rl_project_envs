@@ -62,6 +62,10 @@ func _process_movement(_delta):
 		else:
 			if not on_platform == null:
 				on_platform = null
+				for platform in path_object_manager.platforms:
+					if platform.position.z > global_position.z:
+						path_object_manager.remove_child(platform)
+						path_object_manager.platforms.erase(platform)
 			match tile.id:
 				tile.TileNames.tree:
 					# Push the robot back if it has moved to a tree tile

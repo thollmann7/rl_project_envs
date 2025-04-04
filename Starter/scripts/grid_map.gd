@@ -67,6 +67,7 @@ func set_cells():
 	add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
 	add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
 	add_row(Tile.TileNames.orange)
+	add_special_rows(0)
 	while current_furthest_row >= -rows_infrontof_player:
 		create_random_row()
 	set_player_position_to_grid_row(0)
@@ -108,7 +109,7 @@ func update_layout(furthest_row_reached):
 		create_random_row()
 	# delete rows behind:
 	for tile in $Tiles.get_children():
-		if tile.position.z / 2 > furthest_row_reached + rows_behind_player:
+		if tile.position.z / 2 > furthest_row_reached + rows_behind_player: # TODO what happens if we jump off the platform out of bounds
 			instantiated_tiles.erase(Vector3i(tile.position / 2))
 			tile_positions.erase(Vector3i(tile.position / 2))
 			$Tiles.remove_child(tile)
@@ -182,7 +183,7 @@ func create_random_row():
 		3: # create road
 			add_special_rows(4)
 		4: # 1 row of water with a 1-tile-bridge
-			add_row(Tile.TileNames.orange, Tile.TileNames.water, grid_size_x-1)
+			add_row(Tile.TileNames.water, Tile.TileNames.orange, 1)
 		5: # maze
 			add_special_rows(2)
 		6:# coins behind wall
@@ -197,30 +198,7 @@ func create_random_row():
 func add_special_rows(k):
 	match k:
 		0: # coins behind wall
-			set_row_tiles_ordered([
-				Tile.TileNames.orange,
-				Tile.TileNames.tree,
-				Tile.TileNames.tree,
-				Tile.TileNames.tree,
-				Tile.TileNames.orange,
-				Tile.TileNames.tree,
-				])
-			set_row_tiles_ordered([
-				Tile.TileNames.coin,
-				Tile.TileNames.coin,
-				Tile.TileNames.coin,
-				Tile.TileNames.tree,
-				Tile.TileNames.door_closed,
-				Tile.TileNames.tree,
-				])
-			set_row_tiles_ordered([
-				Tile.TileNames.tree,
-				Tile.TileNames.tree,
-				Tile.TileNames.tree,
-				Tile.TileNames.tree,
-				Tile.TileNames.orange,
-				Tile.TileNames.tree,
-				])
+			_set_coins_behind_wall()
 		1: # 1-5 coins infront of door
 			add_row(Tile.TileNames.orange, Tile.TileNames.coin, rng.randi_range(1, grid_size_x))
 			add_row(Tile.TileNames.tree, Tile.TileNames.door_closed, 1)
@@ -228,7 +206,7 @@ func add_special_rows(k):
 			_create_maze(rng.randi_range(2, 4))
 		3: # create river with moving platform
 			_create_platform(rng.randi_range(0, 2))
-		4: # create circular road
+		4: # create road
 			_create_road(rng.randi_range(0, 2))
 		_:
 			pass
@@ -352,6 +330,59 @@ func _create_path_object(type : int, bottomleft : Vector3, topright : Vector3):
 		# append topleft
 		corners.append(Vector3(bottomleft.x, 0, topright.z))
 	path_object_manager.create_path_object(corners, type)
+	
+func _set_coins_behind_wall():
+	# THIS IS ONLY FOR grid_size_x = 6 !!!!!!!!
+	#
+	# door on left or right side
+	var door_side = rng.randi_range(0, 1)
+	# door can either be at an edge or one field inwards
+	var door_at_edge = rng.randi_range(0, 1)
+	# free tile slot can also be either 4 and 3 possibilites
+	var free_tile_slot: int
+	if door_at_edge:
+		free_tile_slot = rng.randi_range(0, 3)
+	else:
+		free_tile_slot = rng.randi_range(0, 2)
+		
+	# row 1
+	var row_1 = []
+	for i in range(free_tile_slot):
+		row_1.append(Tile.TileNames.tree)
+	row_1.append(Tile.TileNames.orange)
+	var door_at = 6 if door_at_edge else 5
+	while row_1.size() < door_at - 1:
+		row_1.append(Tile.TileNames.tree)
+	row_1.append(Tile.TileNames.orange)
+	if row_1.size() < 6:
+		row_1.append(Tile.TileNames.tree)
+	
+	# row 2
+	var row_2 = []
+	# if the door is at the edge, spawn 4 coins, else spawn 3
+	for i in range(door_at - 2):
+		row_2.append(Tile.TileNames.coin)
+	row_2.append(Tile.TileNames.tree)
+	row_2.append(Tile.TileNames.door_closed)
+	if row_2.size() < 6:
+		row_2.append(Tile.TileNames.tree)
+	
+	# row 3
+	var row_3 = []
+	while row_3.size() < door_at - 1:
+		row_3.append(Tile.TileNames.tree)
+	row_3.append(Tile.TileNames.orange)
+	if row_3.size() < 6:
+		row_3.append(Tile.TileNames.tree)
+		
+	# if door_side == 1: flip all rows
+	for row in [row_1, row_2, row_3]:
+		if door_side:
+			row.reverse()
+		print(row)
+		set_row_tiles_ordered(row)
+	
+	
 	
 func print_map():
 	for key in instantiated_tiles.keys():

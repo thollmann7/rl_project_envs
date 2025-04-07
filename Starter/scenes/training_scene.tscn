@@ -20,15 +20,6 @@ glow_enabled = true
 
 [node name="GameScene" parent="." instance=ExtResource("1_ft0b8")]
 
-[node name="GameScene2" parent="." instance=ExtResource("1_ft0b8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0, 0)
-
-[node name="GameScene3" parent="." instance=ExtResource("1_ft0b8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, 0)
-
-[node name="GameScene4" parent="." instance=ExtResource("1_ft0b8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -400)
-
 [node name="Sync" type="Node" parent="."]
 script = ExtResource("2_sk0r2")
 action_repeat = 1

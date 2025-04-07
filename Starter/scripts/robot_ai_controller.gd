@@ -13,8 +13,10 @@ func get_obs() -> Dictionary:
 	# and does not rotate with the robot, same with others.
 	# Set to observe all cells from two rows in front of player,
 	# 0 behind
-	var visible_rows_in_front_of_player: int = 2
-	var visible_rows_behind_the_player: int = 0
+	
+	# -> we set this to 3 rows ahead and 2 behind
+	var visible_rows_in_front_of_player: int = 4
+	var visible_rows_behind_the_player: int = 2
 
 	# Set to observe the entire width of the grid on both sides
 	# so it will always see all cells up to 2 rows in front.
@@ -24,9 +26,14 @@ func get_obs() -> Dictionary:
 	# For tiles near player we provide [direction, id] (e.g: [-1, 0])
 	# direction is -1 or 1 for cars, 0 for static tiles
 	# if a car is in a tile, we override the id of tile underneath
+	
+	# -> we dont care about direction, we instead always give this and the last observation
+	# such that the ai can learn directions from observing
 
 	# Car ID is the ID of the last tile + 1
+	# i guess this is fine. also add platform id as car_id + 1
 	var car_id = Tile.TileNames.size()
+	var platform_id = car_id + 1
 	
 	# If there is no tile placed at the grid coord, we use -1 as id
 	var no_tile_id: int = -1
@@ -47,7 +54,9 @@ func get_obs() -> Dictionary:
 			var tile: Tile = player.map.get_tile(grid_pos)
 
 			if not tile:
-				observations.append_array([0, no_tile_id])
+				# observations.append_array([0, no_tile_id])
+				# we dont use the direction
+				observations.append(no_tile_id)
 			else:
 				var is_car: bool
 				for car in player.car_manager.cars:
@@ -57,7 +66,7 @@ func get_obs() -> Dictionary:
 				if is_car:
 					observations.append(car_id)
 				else:
-					observations.append_array([0, tile.id])
+					observations.append(tile.id)
 
 	return {"obs": observations}
 

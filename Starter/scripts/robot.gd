@@ -16,8 +16,6 @@ class_name Player
 
 var furthest_z_reached = 0
 
-var last_dist_to_goal
-
 var on_platform = null
 
 #region Set by AIController
@@ -32,6 +30,7 @@ func _physics_process(delta):
 	# negative, bc we go towards negative zw
 	if position.z < furthest_z_reached:
 		furthest_z_reached = position.z
+		_ai_controller.reward += 1
 		map.update_layout(furthest_z_reached / 2)
 	if _ai_controller.needs_reset:
 		game_over()
@@ -87,11 +86,6 @@ func _process_movement(_delta):
 					# change coin to orange tile
 					map.swap_tile(tile, Tile.TileNames.orange)
 					map.check_doors()
-				# THIS IS THE GOAL STATE
-				#elif tile.id == tile.TileNames.goal:
-					# If a goal tile is reached, end episode with reward +1
-				#	game_over(1)
-				#	print_game_status("Success, reached goal")
 				_:
 					for car in path_object_manager.cars:
 						if get_grid_position() == map.get_grid_position(car.global_position):
@@ -107,18 +101,9 @@ func _process_movement(_delta):
 		if not on_platform == null:
 			global_position.x = on_platform.position.x
 			global_position.z = on_platform.position.z
-			
-	reward_approaching_goal()
 
 
-func reward_approaching_goal():
-	var grid_pos: Vector3i = get_grid_position()
-	var dist_to_goal = grid_pos.distance_to(map.goal_position)
-	if last_dist_to_goal == null: last_dist_to_goal = dist_to_goal
-	
-	if dist_to_goal < last_dist_to_goal:
-		_ai_controller.reward += (last_dist_to_goal - dist_to_goal) / 10.0
-		last_dist_to_goal = dist_to_goal
+
 
 func get_grid_position() -> Vector3i:
 	return map.get_grid_position(global_position)
@@ -131,7 +116,6 @@ func game_over(reward = 0.0):
 
 func reset():
 	print("RESET ALL")
-	last_dist_to_goal = null
 	furthest_z_reached = 0
 	# Order of resetting is important:
 	# We reset the map first, which sets a new player start position

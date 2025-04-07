@@ -3,6 +3,8 @@ class_name RobotAIController
 
 @onready var player := get_parent() as Player
 
+var last_observations : Array
+
 
 func get_obs() -> Dictionary:
 	var observations := Array()
@@ -62,13 +64,19 @@ func get_obs() -> Dictionary:
 				for car in player.path_object_manager.cars:
 					if grid_pos == player.map.get_grid_position(car.global_position):
 						is_car = true
-						observations.append(car.current_direction)
 				if is_car:
 					observations.append(car_id)
 				else:
 					observations.append(tile.id)
 
-	return {"obs": observations}
+	var obs_to_return = Array()
+	if last_observations == null:
+		last_observations = observations
+	obs_to_return.append_array(last_observations)
+	obs_to_return.append_array(observations)
+	last_observations = observations
+		
+	return {"obs": obs_to_return}
 
 func get_reward() -> float:
 	return reward

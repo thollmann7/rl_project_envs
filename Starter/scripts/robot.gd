@@ -127,6 +127,7 @@ func reset():
 	#car_manager.update_cars()
 	# reset camera to initial position
 	camera.reset()
+	_ai_controller.last_observations = null
 
 func print_game_status(message: String):
 	if print_game_status_enabled:

@@ -64,8 +64,20 @@ func set_cells():
 	remove_all_tiles()
 	
 	add_row(Tile.TileNames.orange)
+	_create_path_object(
+		0,
+		Vector3(0, 0, current_furthest_row * 2),
+		Vector3((grid_size_x - 1) * 2, 0, current_furthest_row * 2),
+	)
+	add_row(Tile.TileNames.road)
 	add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
 	add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
+	add_row(Tile.TileNames.orange)
+	add_row(Tile.TileNames.orange)
+	add_row(Tile.TileNames.orange)
+	add_row(Tile.TileNames.orange)
+	add_row(Tile.TileNames.orange)
+	add_row(Tile.TileNames.orange)
 	add_row(Tile.TileNames.orange)
 	
 	while current_furthest_row >= -rows_infrontof_player:

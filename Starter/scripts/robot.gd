@@ -27,13 +27,16 @@ func _ready():
 	reset()
 
 func _physics_process(delta):
+	# reward of -1 per step
+	_ai_controller.reward -= 1
 	# negative, bc we go towards negative zw
 	if position.z < furthest_z_reached:
 		furthest_z_reached = position.z
-		_ai_controller.reward += 1
+		# reward of +10 per new row
+		_ai_controller.reward += 10
 		map.update_layout(furthest_z_reached / 2)
 	if _ai_controller.needs_reset:
-		game_over()
+		game_over(0)
 	_process_movement(delta)
 
 
@@ -41,8 +44,7 @@ func _process_movement(_delta):
 	for car in path_object_manager.cars:
 		if get_grid_position() == map.get_grid_position(car.global_position):
 			# If a car has moved to the current player position, end episode
-			game_over(0)
-			print_game_status("Failed, hit car while standing")
+			game_over()
 
 	if requested_movement:
 		if map.instantiated_tiles.size() != map.tile_positions.size():
@@ -81,7 +83,7 @@ func _process_movement(_delta):
 							on_platform = null
 					# die if step in water
 					if on_platform == null:
-						game_over(0)
+						game_over()
 				tile.TileNames.coin:
 					# change coin to orange tile
 					map.swap_tile(tile, Tile.TileNames.orange)
@@ -90,8 +92,7 @@ func _process_movement(_delta):
 					for car in path_object_manager.cars:
 						if get_grid_position() == map.get_grid_position(car.global_position):
 							# If the robot moved to a car's current position, end episode
-							game_over(0)
-							print_game_status("Failed, hit car while walking")
+							game_over()
 
 		# After processing the move, zero the movement for the next step
 		# (only in case of human control)
@@ -108,7 +109,7 @@ func _process_movement(_delta):
 func get_grid_position() -> Vector3i:
 	return map.get_grid_position(global_position)
 
-func game_over(reward = 0.0):
+func game_over(reward = -100.0):
 	_ai_controller.done = true
 	_ai_controller.reward += reward
 	_ai_controller.reset()

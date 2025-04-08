@@ -3,7 +3,7 @@ class_name RobotAIController
 
 @onready var player := get_parent() as Player
 
-var last_observations : Array
+var last_observations = null
 
 
 func get_obs() -> Dictionary:

@@ -12,4 +12,3 @@ func _process(delta: float) -> void:
 		
 func reset():
 	position = init_position
-	

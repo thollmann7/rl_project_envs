@@ -381,7 +381,9 @@ func _set_coins_behind_wall():
 			row.reverse()
 		set_row_tiles_ordered(row)
 	
-	
+func _notification(what):
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		get_tree().quit() # default behavior
 	
 func print_map():
 	for key in instantiated_tiles.keys():

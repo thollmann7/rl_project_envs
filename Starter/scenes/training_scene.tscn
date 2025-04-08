@@ -1,5 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://cl152s178wgm5"]
+[gd_scene load_steps=7 format=3 uid="uid://cl152s178wgm5"]
 
+[ext_resource type="Script" uid="uid://68y1esowpdoq" path="res://scenes/training_scene.gd" id="1_dxuga"]
 [ext_resource type="PackedScene" uid="uid://dn2auvcty4aoe" path="res://scenes/game_scene.tscn" id="1_ft0b8"]
 [ext_resource type="Script" uid="uid://cpyu25udsnohu" path="res://addons/godot_rl_agents/sync.gd" id="2_sk0r2"]
 
@@ -17,6 +18,7 @@ tonemap_mode = 2
 glow_enabled = true
 
 [node name="TrainingScene" type="Node3D"]
+script = ExtResource("1_dxuga")
 
 [node name="GameScene" parent="." instance=ExtResource("1_ft0b8")]
 
@@ -31,3 +33,5 @@ environment = SubResource("Environment_iamhl")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
 shadow_enabled = true
+
+[connection signal="tree_exited" from="." to="." method="_on_tree_exited"]

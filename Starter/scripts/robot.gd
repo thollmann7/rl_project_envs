@@ -32,6 +32,8 @@ func _physics_process(delta):
 		furthest_z_reached = position.z
 		_ai_controller.reward += 1
 		map.update_layout(furthest_z_reached / 2)
+		if int(furthest_z_reached) % 15 == 0:
+			Utils.free_orphaned_nodes()
 	if _ai_controller.needs_reset:
 		game_over()
 	_process_movement(delta)
@@ -115,7 +117,7 @@ func game_over(reward = 0.0):
 	reset()
 
 func reset():
-	print("RESET ALL")
+	Utils.free_orphaned_nodes()
 	furthest_z_reached = 0
 	# Order of resetting is important:
 	# We reset the map first, which sets a new player start position

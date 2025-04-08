@@ -15,10 +15,6 @@ run/main_scene="uid://cl152s178wgm5"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
-[autoload]
-
-Utils="*res://scripts/utils.gd"
-
 [dotnet]
 
 project/assembly_name="GridRobot"

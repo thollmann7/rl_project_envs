@@ -51,6 +51,7 @@ func create_tile(tile_name: Tile.TileNames, grid_position: Vector3i, sibling: Ti
 	if sibling:
 		sibling.add_sibling(new_tile)
 		$Tiles.remove_child(sibling)
+		sibling.queue_free()
 	else:
 		$Tiles.add_child(new_tile)
 	new_tile.position = grid_position * tile_size
@@ -113,6 +114,7 @@ func update_layout(furthest_row_reached):
 			instantiated_tiles.erase(Vector3i(tile.position / 2))
 			tile_positions.erase(Vector3i(tile.position / 2))
 			$Tiles.remove_child(tile)
+			tile.queue_free()
 		else:
 			break
 	# delete path_objects that are out of bounds:
@@ -121,6 +123,7 @@ func update_layout(furthest_row_reached):
 			path_object_manager.remove_child(path_object)
 			path_object_manager.cars.erase(path_object)
 			path_object_manager.platforms.erase(path_object)
+			path_object.queue_free()
 		
 		
 

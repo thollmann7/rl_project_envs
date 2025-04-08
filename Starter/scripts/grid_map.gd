@@ -32,6 +32,7 @@ var rng = RandomNumberGenerator.new()
 func remove_all_tiles():
 	for tile in $Tiles.get_children():
 		$Tiles.remove_child(tile)
+		tile.queue_free()
 	instantiated_tiles.clear()
 	tile_positions.clear()
 	current_furthest_row = 0

@@ -92,9 +92,8 @@ func _physics_process(_delta: float) -> void:
 	n_steps += 1
 	# TODO change this back
 	if n_steps > reset_after:
-		pass
-		#player.game_over(0)
-		#player.print_game_status("Episode timed out.")
+		player.game_over(0)
+		player.print_game_status("Episode timed out.")
 
 ## Defines the actions for the AI agent
 func get_action_space() -> Dictionary:

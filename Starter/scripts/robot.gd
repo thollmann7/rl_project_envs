@@ -15,6 +15,9 @@ class_name Player
 @onready var visual_robot: Node3D = $robot
 
 var furthest_z_reached = 0
+# change this for training (where it gets updated):
+@export var max_steps_without_progress = 200
+var current_steps_without_progress = 0
 
 var on_platform = null
 
@@ -35,6 +38,12 @@ func _physics_process(delta):
 		# reward of +10 per new row
 		_ai_controller.reward += 10
 		map.update_layout(furthest_z_reached / 2)
+		current_steps_without_progress = 0
+	else:
+		pass
+		#current_steps_without_progress += 1
+	if current_steps_without_progress > max_steps_without_progress:
+		game_over(0)
 	if _ai_controller.needs_reset:
 		game_over(0)
 	_process_movement(delta)
@@ -109,13 +118,14 @@ func _process_movement(_delta):
 func get_grid_position() -> Vector3i:
 	return map.get_grid_position(global_position)
 
-func game_over(reward = -100.0):
+func game_over(reward = 0.0):
 	_ai_controller.done = true
 	_ai_controller.reward += reward
 	_ai_controller.reset()
 	reset()
 
 func reset():
+	current_steps_without_progress = 0
 	furthest_z_reached = 0
 	# Order of resetting is important:
 	# We reset the map first, which sets a new player start position
@@ -123,8 +133,6 @@ func reset():
 	map.reset()
 	# after that, we can set the player position
 	global_position = Vector3(map.player_start_position)
-	# and also reset or create (on first start) the cars
-	#car_manager.update_cars()
 	# reset camera to initial position
 	camera.reset()
 	_ai_controller.last_observations = null

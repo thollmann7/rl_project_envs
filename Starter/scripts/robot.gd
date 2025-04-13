@@ -15,7 +15,6 @@ class_name Player
 @onready var visual_robot: Node3D = $robot
 
 var furthest_z_reached = 0
-# change this for training (where it gets updated):
 @export var max_steps_without_progress = 200
 var current_steps_without_progress = 0
 
@@ -31,17 +30,21 @@ func _ready():
 
 func _physics_process(delta):
 	# reward of -1 per step
-	_ai_controller.reward -= 1
+	if Global.game_mode == Global.GameMode.TRAIN:
+		_ai_controller.reward -= 1
 	# negative, bc we go towards negative zw
 	if position.z < furthest_z_reached:
 		furthest_z_reached = position.z
 		# reward of +10 per new row
-		_ai_controller.reward += 10
+		if Global.game_mode == Global.GameMode.TRAIN:
+			_ai_controller.reward += 20
+		else:
+			_ai_controller.reward += 1
 		map.update_layout(furthest_z_reached / 2)
 		current_steps_without_progress = 0
 	else:
-		pass
-		#current_steps_without_progress += 1
+		if Global.game_mode == Global.GameMode.EVAL:
+			current_steps_without_progress += 1
 	if current_steps_without_progress > max_steps_without_progress:
 		game_over(0)
 	if _ai_controller.needs_reset:

@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="CrossTheRoadEnv"
-run/main_scene="uid://cl152s178wgm5"
+run/main_scene="uid://d20i3eh858rqq"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+Global="*res://scripts/global.gd"
 
 [dotnet]
 

@@ -63,11 +63,11 @@ func create_tile(tile_name: Tile.TileNames, grid_position: Vector3i, sibling: Ti
 
 
 func set_cells():
+	
 	remove_all_tiles()
 	
 	add_row(Tile.TileNames.orange)
-	add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
-	add_row(Tile.TileNames.orange, Tile.TileNames.tree, 2)
+	add_row(Tile.TileNames.orange, Tile.TileNames.tree, 3)
 	add_row(Tile.TileNames.orange)
 	
 	while current_furthest_row >= -rows_infrontof_player:
@@ -162,18 +162,30 @@ func set_row_tiles_ordered(tiles):
 	
 func create_random_row():
 	var row_to_create: int
-	if current_furthest_row > -20:
-		# trees, water-holes and road
-		row_to_create = rng.randi_range(0, 4)
-	elif current_furthest_row > -40:
-		# add maze
-		row_to_create = rng.randi_range(0, 5)
-	elif current_furthest_row > -60:
-		# add coins
-		row_to_create = rng.randi_range(0, 7)
-	else:
-		# add river platform
-		row_to_create = rng.randi_range(0, 8)
+	match Global.game_content:
+		Global.GameContent.ALL:
+			if current_furthest_row > -20:
+				# trees, water-holes and road
+				row_to_create = rng.randi_range(0, 4)
+			elif current_furthest_row > -40:
+				# add maze
+				row_to_create = rng.randi_range(0, 5)
+			elif current_furthest_row > -60:
+				# add coins
+				row_to_create = rng.randi_range(0, 7)
+			else:
+				# add river platform
+				row_to_create = rng.randi_range(0, 8)
+		Global.GameContent.TREES_WATER:
+			row_to_create = rng.randi_range(0, 1)
+		Global.GameContent.ROADS:
+			row_to_create = 2
+		Global.GameContent.BRIDGES:
+			row_to_create = rng.randi_range(4, 5)
+		Global.GameContent.COINS:
+			row_to_create = rng.randi_range(6, 7)
+		Global.GameContent.PLATFORMS:
+			row_to_create = 8
 		
 	match row_to_create:
 		0: # 2 rows of trees
@@ -183,37 +195,22 @@ func create_random_row():
 			add_row(Tile.TileNames.orange, Tile.TileNames.water, 2)
 			add_row(Tile.TileNames.orange, Tile.TileNames.water, 2)
 		2: # create road
-			add_special_rows(4)
+			_create_road(rng.randi_range(0, 2))
 		3: # create road
-			add_special_rows(4)
+			_create_road(rng.randi_range(0, 2))
 		4: # 1 row of water with a 1-tile-bridge
 			add_row(Tile.TileNames.water, Tile.TileNames.orange, 1)
 		5: # maze
-			add_special_rows(2)
+			_create_maze(rng.randi_range(2, 4))
 		6:# coins behind wall
-			add_special_rows(0)
-		7: # 1-5 coins infront of door
-			add_special_rows(1)
-		8: # create river with moving platform
-			add_special_rows(3)
-	add_row(Tile.TileNames.orange)
-	
-	
-func add_special_rows(k):
-	match k:
-		0: # coins behind wall
 			_set_coins_behind_wall()
-		1: # 1-5 coins infront of door
+		7: # 1-5 coins infront of door
 			add_row(Tile.TileNames.orange, Tile.TileNames.coin, rng.randi_range(1, grid_size_x))
 			add_row(Tile.TileNames.tree, Tile.TileNames.door_closed, 1)
-		2: # small maze (between 3 and 7 rows)
-			_create_maze(rng.randi_range(2, 4))
-		3: # create river with moving platform
+		8: # create river with moving platform
 			_create_platform(rng.randi_range(0, 2))
-		4: # create road
-			_create_road(rng.randi_range(0, 2))
-		_:
-			pass
+	add_row(Tile.TileNames.orange)
+
 
 func _create_maze(size: int):
 	# size is the number of entrypoints (single-tile-rows).

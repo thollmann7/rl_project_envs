@@ -120,6 +120,7 @@ func update_layout(furthest_row_reached):
 			break
 	# delete path_objects that are out of bounds:
 	for path_object in path_object_manager.get_children():
+		print(path_object)
 		if path_object.remove_on_row_deletion > furthest_row_reached + rows_behind_player:
 			path_object_manager.remove_child(path_object)
 			path_object_manager.cars.erase(path_object)

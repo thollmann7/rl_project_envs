@@ -15,6 +15,8 @@ class_name Player
 @onready var visual_robot: Node3D = $robot
 
 var furthest_z_reached = 0
+@export var max_steps_without_progress = 200
+var current_steps_without_progress = 0
 
 var on_platform = null
 
@@ -27,13 +29,26 @@ func _ready():
 	reset()
 
 func _physics_process(delta):
+	# reward of -1 per step
+	if Global.game_mode == Global.GameMode.TRAIN:
+		_ai_controller.reward -= 1
 	# negative, bc we go towards negative zw
 	if position.z < furthest_z_reached:
 		furthest_z_reached = position.z
-		_ai_controller.reward += 1
+		# reward of +10 per new row
+		if Global.game_mode == Global.GameMode.TRAIN:
+			_ai_controller.reward += 20
+		else:
+			_ai_controller.reward += 1
 		map.update_layout(furthest_z_reached / 2)
+		current_steps_without_progress = 0
+	else:
+		if Global.game_mode == Global.GameMode.EVAL:
+			current_steps_without_progress += 1
+	if current_steps_without_progress > max_steps_without_progress:
+		game_over(0)
 	if _ai_controller.needs_reset:
-		game_over()
+		game_over(0)
 	_process_movement(delta)
 
 
@@ -41,8 +56,7 @@ func _process_movement(_delta):
 	for car in path_object_manager.cars:
 		if get_grid_position() == map.get_grid_position(car.global_position):
 			# If a car has moved to the current player position, end episode
-			game_over(0)
-			print_game_status("Failed, hit car while standing")
+			game_over()
 
 	if requested_movement:
 		if map.instantiated_tiles.size() != map.tile_positions.size():
@@ -65,6 +79,7 @@ func _process_movement(_delta):
 					if platform.position.z > global_position.z:
 						path_object_manager.remove_child(platform)
 						path_object_manager.platforms.erase(platform)
+						platform.queue_free()
 			match tile.id:
 				tile.TileNames.tree:
 					# Push the robot back if it has moved to a tree tile
@@ -81,7 +96,7 @@ func _process_movement(_delta):
 							on_platform = null
 					# die if step in water
 					if on_platform == null:
-						game_over(0)
+						game_over()
 				tile.TileNames.coin:
 					# change coin to orange tile
 					map.swap_tile(tile, Tile.TileNames.orange)
@@ -90,8 +105,7 @@ func _process_movement(_delta):
 					for car in path_object_manager.cars:
 						if get_grid_position() == map.get_grid_position(car.global_position):
 							# If the robot moved to a car's current position, end episode
-							game_over(0)
-							print_game_status("Failed, hit car while walking")
+							game_over()
 
 		# After processing the move, zero the movement for the next step
 		# (only in case of human control)
@@ -115,6 +129,7 @@ func game_over(reward = 0.0):
 	reset()
 
 func reset():
+	current_steps_without_progress = 0
 	furthest_z_reached = 0
 	# Order of resetting is important:
 	# We reset the map first, which sets a new player start position
@@ -122,8 +137,6 @@ func reset():
 	map.reset()
 	# after that, we can set the player position
 	global_position = Vector3(map.player_start_position)
-	# and also reset or create (on first start) the cars
-	#car_manager.update_cars()
 	# reset camera to initial position
 	camera.reset()
 	_ai_controller.last_observations = null

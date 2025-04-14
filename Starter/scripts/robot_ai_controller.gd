@@ -5,6 +5,8 @@ class_name RobotAIController
 
 var last_observations = null
 
+var last_actions = ["", "", "", "", ""]
+
 
 func get_obs() -> Dictionary:
 	var observations := Array()
@@ -90,11 +92,9 @@ func _physics_process(_delta: float) -> void:
 	# Reset on timeout, this is implemented in parent class to set needs_reset to true,
 	# we are re-implementing here to call player.game_over() that handles the game reset.
 	n_steps += 1
-	# TODO change this back
 	if n_steps > reset_after:
-		pass
-		#player.game_over(0)
-		#player.print_game_status("Episode timed out.")
+		player.game_over(0)
+		player.print_game_status("Episode timed out.")
 
 ## Defines the actions for the AI agent
 func get_action_space() -> Dictionary:
@@ -110,25 +110,50 @@ func set_action(action = null) -> void:
 	# we use those to allow the agent to move in 4 directions,
 	# + there is a 'no movement' action.
 	# First convert to int to use match as action value is of float type.
+	
+	var new_action = null
 	match int(action.movement):
 		0:
-			player.requested_movement = Vector3.LEFT
+			new_action = Vector3.LEFT
 		1:
-			player.requested_movement = Vector3.RIGHT
+			new_action = Vector3.RIGHT
 		2:
-			player.requested_movement = Vector3.FORWARD
+			new_action = Vector3.FORWARD
 		3:
-			player.requested_movement = Vector3.BACK
+			new_action = Vector3.BACK
 		4:
-			player.requested_movement = Vector3.ZERO
+			new_action = Vector3.ZERO
+	player.requested_movement = new_action
+	add_last_action(new_action)
 
 ## Applies user input actions to the robot
 func get_user_input() -> void:
+	var new_action = null
 	if Input.is_action_just_pressed("move_up"):
-		player.requested_movement = Vector3.FORWARD
+		new_action = Vector3.FORWARD
 	elif Input.is_action_just_pressed("move_right"):
-		player.requested_movement = Vector3.RIGHT
+		new_action = Vector3.RIGHT
 	elif Input.is_action_just_pressed("move_down"):
-		player.requested_movement = Vector3.BACK
+		new_action = Vector3.BACK
 	elif Input.is_action_just_pressed("move_left"):
-		player.requested_movement = Vector3.LEFT
+		new_action = Vector3.LEFT
+	if new_action != null:
+		player.requested_movement = new_action
+		add_last_action(new_action)
+
+func add_last_action(action):
+	var new_action = ""
+	match action:
+		Vector3.LEFT:
+			new_action = "left"
+		Vector3.RIGHT:
+			new_action = "right"
+		Vector3.FORWARD:
+			new_action = "forward"
+		Vector3.BACK:
+			new_action = "back"
+		Vector3.ZERO:
+			new_action = "nothing"
+	if last_actions[4] != new_action:
+		last_actions.remove_at(0)
+		last_actions.append(new_action)

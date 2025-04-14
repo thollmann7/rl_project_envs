@@ -185,7 +185,6 @@ metadata/_edit_lock_ = true
 
 [node name="AIController3D" type="Node3D" parent="."]
 script = ExtResource("5_sx7mj")
-reset_after = 40
 
 [node name="robot" parent="." instance=ExtResource("1_n7jto")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -0.1, 0)

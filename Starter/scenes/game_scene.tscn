@@ -1,14 +1,72 @@
-[gd_scene load_steps=8 format=3 uid="uid://dn2auvcty4aoe"]
+[gd_scene load_steps=10 format=3 uid="uid://dn2auvcty4aoe"]
 
 [ext_resource type="PackedScene" uid="uid://bsuw6dqwq2e3v" path="res://scenes/robot.tscn" id="1_2k47m"]
+[ext_resource type="Script" uid="uid://r2h2lp033031" path="res://v_box_container.gd" id="1_b5spy"]
 [ext_resource type="Script" uid="uid://bmtk1e1xv5fqc" path="res://scripts/camera_3d.gd" id="1_rurhu"]
 [ext_resource type="PackedScene" uid="uid://crui8soua8lj2" path="res://scenes/tile.tscn" id="2_ltmsi"]
+[ext_resource type="Script" uid="uid://bxqpg0jmiv80" path="res://v_box_container_2.gd" id="2_utbpp"]
 [ext_resource type="Script" uid="uid://crcy70dh2t4t1" path="res://scripts/grid_map.gd" id="4_lrlqi"]
 [ext_resource type="PackedScene" uid="uid://bhk60xl5s8pmm" path="res://scenes/car.tscn" id="4_nsbp8"]
 [ext_resource type="Script" uid="uid://ct3yd66wu2f6i" path="res://scripts/path_object_manager.gd" id="8_b5spy"]
 [ext_resource type="PackedScene" uid="uid://d2xhm7s3o8a31" path="res://scenes/platform.tscn" id="9_utbpp"]
 
 [node name="GameScene" type="Node3D"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
+offset_left = 896.0
+offset_top = 41.0
+offset_right = 1079.0
+offset_bottom = 363.0
+script = ExtResource("1_b5spy")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Last Actions:"
+
+[node name="action_1" type="Label" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Test 123"
+
+[node name="action_2" type="Label" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Test 123"
+
+[node name="action_3" type="Label" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Test 123"
+
+[node name="action_4" type="Label" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Test 123"
+
+[node name="action_5" type="Label" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Test 123"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer"]
+offset_left = 898.0
+offset_top = 378.0
+offset_right = 1081.0
+offset_bottom = 700.0
+script = ExtResource("2_utbpp")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Current Row:"
+
+[node name="current_row_label" type="Label" parent="CanvasLayer/VBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Test 123"
 
 [node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("player")]
 transform = Transform3D(1, 0, 0, 0, 0.422618, 0.906308, 0, -0.906308, 0.422618, 5, 10, 5)

@@ -5,7 +5,7 @@ class_name RobotAIController
 
 var last_observations = null
 
-var last_actions = ["", "", "", "", ""]
+var last_action = 0
 
 
 func get_obs() -> Dictionary:
@@ -142,18 +142,14 @@ func get_user_input() -> void:
 		add_last_action(new_action)
 
 func add_last_action(action):
-	var new_action = ""
 	match action:
-		Vector3.LEFT:
-			new_action = "left"
-		Vector3.RIGHT:
-			new_action = "right"
 		Vector3.FORWARD:
-			new_action = "forward"
+			last_action = 1
+		Vector3.LEFT:
+			last_action = 2
 		Vector3.BACK:
-			new_action = "back"
+			last_action = 3
+		Vector3.RIGHT:
+			last_action = 4
 		Vector3.ZERO:
-			new_action = "nothing"
-	if last_actions[4] != new_action:
-		last_actions.remove_at(0)
-		last_actions.append(new_action)
+			last_action = 0

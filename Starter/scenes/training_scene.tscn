@@ -22,15 +22,6 @@ script = ExtResource("1_dxuga")
 
 [node name="GameScene" parent="." instance=ExtResource("1_ft0b8")]
 
-[node name="GameScene_train1" parent="." instance=ExtResource("1_ft0b8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 0, 0)
-
-[node name="GameScene_train2" parent="." instance=ExtResource("1_ft0b8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 0, 0)
-
-[node name="GameScene_train3" parent="." instance=ExtResource("1_ft0b8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 0, 0)
-
 [node name="Sync" type="Node" parent="."]
 script = ExtResource("2_sk0r2")
 action_repeat = 1

@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://bsuw6dqwq2e3v"]
 
-[ext_resource type="PackedScene" uid="uid://ot6fxmn5pk7s" path="res://assets/robot.glb" id="1_n7jto"]
+[ext_resource type="PackedScene" uid="uid://3001kad4y7cg" path="res://assets/robot.glb" id="1_n7jto"]
 [ext_resource type="Script" uid="uid://t5c7rxep7re6" path="res://scripts/robot.gd" id="1_vywkg"]
 [ext_resource type="Script" uid="uid://cmq7mmb0p405c" path="res://scripts/robot_ai_controller.gd" id="5_sx7mj"]
 

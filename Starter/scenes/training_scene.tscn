@@ -1,7 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://cl152s178wgm5"]
+[gd_scene load_steps=6 format=3 uid="uid://cl152s178wgm5"]
 
 [ext_resource type="Script" uid="uid://c6a1k4weckxi4" path="res://scripts/training_scene.gd" id="1_dxuga"]
-[ext_resource type="PackedScene" uid="uid://dn2auvcty4aoe" path="res://scenes/game_scene.tscn" id="1_ft0b8"]
 [ext_resource type="Script" uid="uid://cpyu25udsnohu" path="res://addons/godot_rl_agents/sync.gd" id="2_sk0r2"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bdk3k"]
@@ -19,20 +18,11 @@ glow_enabled = true
 
 [node name="TrainingScene" type="Node3D"]
 script = ExtResource("1_dxuga")
-
-[node name="GameScene" parent="." instance=ExtResource("1_ft0b8")]
-
-[node name="GameScene_train1" parent="." instance=ExtResource("1_ft0b8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 0, 0)
-
-[node name="GameScene_train2" parent="." instance=ExtResource("1_ft0b8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 0, 0)
-
-[node name="GameScene_train3" parent="." instance=ExtResource("1_ft0b8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 0, 0)
+scene_count = 16
 
 [node name="Sync" type="Node" parent="."]
 script = ExtResource("2_sk0r2")
+control_mode = 0
 action_repeat = 1
 speed_up = 8.0
 

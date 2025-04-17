@@ -59,6 +59,7 @@ func _process_movement(_delta):
 			game_over()
 
 	if requested_movement:
+		var delayed_platform_reward = 0
 		if map.instantiated_tiles.size() != map.tile_positions.size():
 			map.print_map()
 		# Move the robot to the requested position
@@ -73,6 +74,8 @@ func _process_movement(_delta):
 			# Push the robot back if there's no tile to move to (out of map boundary)
 			global_position -= (requested_movement * movement_step)
 		else:
+			# queue a reward for stepping off of a platform onto a tile.
+			# does NOT get paid if robot steps into water
 			if not on_platform == null:
 				on_platform = null
 				for platform in path_object_manager.platforms:
@@ -80,6 +83,7 @@ func _process_movement(_delta):
 						path_object_manager.remove_child(platform)
 						path_object_manager.platforms.erase(platform)
 						platform.queue_free()
+						delayed_platform_reward = 50
 			match tile.id:
 				tile.TileNames.tree:
 					# Push the robot back if it has moved to a tree tile
@@ -91,12 +95,16 @@ func _process_movement(_delta):
 					for platform in path_object_manager.platforms:
 						if tile.position == platform.position:
 							on_platform = platform
+							# reward for stepping onto platform
+							_ai_controller.reward += 50
 							break
 						else:
 							on_platform = null
 					# die if step in water
 					if on_platform == null:
-						game_over()
+						# punish for stepping into water
+						delayed_platform_reward = 0
+						game_over(-50)
 				tile.TileNames.coin:
 					# change coin to orange tile
 					map.swap_tile(tile, Tile.TileNames.orange)
@@ -106,6 +114,9 @@ func _process_movement(_delta):
 						if get_grid_position() == map.get_grid_position(car.global_position):
 							# If the robot moved to a car's current position, end episode
 							game_over()
+							
+		_ai_controller.reward += delayed_platform_reward
+		print("del plat rew: ", delayed_platform_reward)
 
 		# After processing the move, zero the movement for the next step
 		# (only in case of human control)

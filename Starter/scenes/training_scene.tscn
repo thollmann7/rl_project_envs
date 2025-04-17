@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://cl152s178wgm5"]
+[gd_scene load_steps=7 format=3 uid="uid://cl152s178wgm5"]
 
 [ext_resource type="Script" uid="uid://c6a1k4weckxi4" path="res://scripts/training_scene.gd" id="1_dxuga"]
+[ext_resource type="PackedScene" uid="uid://dn2auvcty4aoe" path="res://scenes/game_scene.tscn" id="2_dxuga"]
 [ext_resource type="Script" uid="uid://cpyu25udsnohu" path="res://addons/godot_rl_agents/sync.gd" id="2_sk0r2"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bdk3k"]
@@ -19,10 +20,10 @@ glow_enabled = true
 [node name="TrainingScene" type="Node3D"]
 script = ExtResource("1_dxuga")
 scene_count = 16
+game_scene = ExtResource("2_dxuga")
 
 [node name="Sync" type="Node" parent="."]
 script = ExtResource("2_sk0r2")
-control_mode = 0
 action_repeat = 1
 speed_up = 8.0
 

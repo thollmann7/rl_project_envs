@@ -116,7 +116,6 @@ func _process_movement(_delta):
 							game_over()
 							
 		_ai_controller.reward += delayed_platform_reward
-		print("del plat rew: ", delayed_platform_reward)
 
 		# After processing the move, zero the movement for the next step
 		# (only in case of human control)

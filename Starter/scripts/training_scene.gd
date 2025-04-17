@@ -2,6 +2,7 @@ extends Node3D
 
 @export var game_mode = Global.GameMode.TRAIN
 @export var scene_count = 1
+@export var game_scene : PackedScene
 
 func _ready() -> void:
 	Global.game_mode = game_mode
@@ -19,11 +20,8 @@ func _ready() -> void:
 		Global.game_content = Global.GameContent.PLATFORMS
 		
 	
-	var game_scene = load("res://scenes/game_scene.tscn")
 	
-	for i in scene_count:
+	for i in range(scene_count):
 		var scene_instance = game_scene.instantiate()
-		add_child(scene_instance)
 		scene_instance.position = Vector3(i * 50, 0, 0)
-		
-	
+		add_child(scene_instance)

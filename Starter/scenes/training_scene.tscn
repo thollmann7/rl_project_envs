@@ -19,7 +19,7 @@ glow_enabled = true
 
 [node name="TrainingScene" type="Node3D"]
 script = ExtResource("1_dxuga")
-scene_count = 16
+scene_count = 8
 game_scene = ExtResource("2_dxuga")
 
 [node name="Sync" type="Node" parent="."]

@@ -96,7 +96,8 @@ func _process_movement(_delta):
 						if tile.position == platform.position:
 							on_platform = platform
 							# reward for stepping onto platform
-							_ai_controller.reward += 50
+							if Global.game_mode == Global.GameMode.TRAIN:
+								_ai_controller.reward += 50
 							break
 						else:
 							on_platform = null
@@ -104,7 +105,9 @@ func _process_movement(_delta):
 					if on_platform == null:
 						# punish for stepping into water
 						delayed_platform_reward = 0
-						game_over(-50)
+						if Global.game_mode == Global.GameMode.TRAIN:
+							_ai_controller.reward -= 50
+						game_over()
 				tile.TileNames.coin:
 					# change coin to orange tile
 					map.swap_tile(tile, Tile.TileNames.orange)
@@ -115,7 +118,8 @@ func _process_movement(_delta):
 							# If the robot moved to a car's current position, end episode
 							game_over()
 							
-		_ai_controller.reward += delayed_platform_reward
+		if Global.game_mode == Global.GameMode.TRAIN:
+			_ai_controller.reward += delayed_platform_reward
 
 		# After processing the move, zero the movement for the next step
 		# (only in case of human control)

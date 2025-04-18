@@ -151,7 +151,8 @@ func check_doors():
 			if tile.position.z >= first_closed_door.position.z:
 				return
 	# 50 points for clearing all coins
-	$"../Robot"._ai_controller.reward += 50
+	if Global.game_mode == Global.GameMode.TRAIN:
+		$"../Robot"._ai_controller.reward += 50
 	swap_tile(first_closed_door, Tile.TileNames.door_open)
 	
 

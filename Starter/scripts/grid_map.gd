@@ -260,6 +260,7 @@ func _create_road(type : int):
 				Vector3((grid_size_x - 1) * 2, 0, current_furthest_row * 2),
 			)
 			add_row(Tile.TileNames.road)
+			add_row(Tile.TileNames.orange)
 			_create_car(
 				Vector3(0, 0, current_furthest_row * 2),
 				Vector3((grid_size_x - 1) * 2, 0, current_furthest_row * 2),

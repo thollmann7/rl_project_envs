@@ -80,7 +80,7 @@ func _process_movement(_delta):
 				on_platform = null
 				for platform in path_object_manager.platforms:
 					if platform.position.z > global_position.z:
-						delayed_platform_reward = 50
+						delayed_platform_reward = 100
 			match tile.id:
 				tile.TileNames.tree:
 					# Push the robot back if it has moved to a tree tile

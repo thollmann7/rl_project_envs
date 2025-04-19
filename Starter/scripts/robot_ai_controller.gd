@@ -24,8 +24,8 @@ func get_obs() -> Dictionary:
 
 	# Set to observe the entire width of the grid on both sides
 	# so it will always see all cells up to 2 rows in front.
-	var visible_columns_left_of_player: int = player.map.grid_size_x
-	var visible_columns_right_of_player: int = player.map.grid_size_x
+	var visible_columns_left_of_player: int = player.map.grid_size_x - 1
+	var visible_columns_right_of_player: int = player.map.grid_size_x - 1
 
 	# For tiles near player we provide [direction, id] (e.g: [-1, 0])
 	# direction is -1 or 1 for cars, 0 for static tiles
@@ -79,14 +79,15 @@ func get_obs() -> Dictionary:
 				else:
 					observations.append(tile.id)
 
-	var obs_to_return = Array()
-	if last_observations == null:
-		last_observations = observations
-	obs_to_return.append_array(last_observations)
-	obs_to_return.append_array(observations)
-	last_observations = observations
+	#var obs_to_return = Array()
+	#if last_observations == null:
+		#last_observations = observations
+	#obs_to_return.append_array(last_observations)
+	#obs_to_return.append_array(observations)
+	#last_observations = observations
 		
-	return {"obs": obs_to_return}
+	#return {"obs": obs_to_return}
+	return {"obs": observations}
 
 func get_reward() -> float:
 	return reward

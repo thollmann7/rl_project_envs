@@ -211,7 +211,7 @@ func create_random_row():
 			add_row(Tile.TileNames.orange, Tile.TileNames.coin, rng.randi_range(1, grid_size_x))
 			add_row(Tile.TileNames.tree, Tile.TileNames.door_closed, 1)
 		8: # create river with moving platform
-			_create_platform(rng.randi_range(0, 2))
+			_create_platform_area(rng.randi_range(0, 2))
 	add_row(Tile.TileNames.orange)
 
 
@@ -248,30 +248,26 @@ func _create_mixed_row(type1 : Tile.TileNames, type2 : Tile.TileNames, type1_ind
 func _create_road(type : int):
 	match type:
 		0: # one road
-			_create_path_object(
-				0,
+			_create_car(
 				Vector3(0, 0, current_furthest_row * 2),
 				Vector3((grid_size_x -1) * 2, 0, current_furthest_row * 2),
 			)
 			add_row(Tile.TileNames.road)
 			
 		1: # two roads
-			_create_path_object(
-				0,
+			_create_car(
 				Vector3(0, 0, current_furthest_row * 2),
 				Vector3((grid_size_x - 1) * 2, 0, current_furthest_row * 2),
 			)
 			add_row(Tile.TileNames.road)
-			_create_path_object(
-				0,
+			_create_car(
 				Vector3(0, 0, current_furthest_row * 2),
 				Vector3((grid_size_x - 1) * 2, 0, current_furthest_row * 2),
 			)
 			add_row(Tile.TileNames.road)
 		2: # move in a circle
 			var length = rng.randi_range(1, 3)
-			_create_path_object(
-				0,
+			_create_car(
 				Vector3(0, 0, current_furthest_row * 2),
 				Vector3((grid_size_x - 1) * 2, 0, (current_furthest_row - length - 1) * 2),
 			)
@@ -280,49 +276,34 @@ func _create_road(type : int):
 				set_row_tiles_ordered(_create_mixed_row(Tile.TileNames.road2, Tile.TileNames.orange, [0, grid_size_x - 1]))
 			add_row(Tile.TileNames.road2)
 	
-func _create_platform(type : int):
+func _create_platform_area(type : int):
 	match type:
 		0: # move on x axis
 			# create water
-			var startpoint = rng.randi_range(0, grid_size_x - 1)
-			var endpoint = rng.randi_range(0, grid_size_x - 1)
-			set_row_tiles_ordered(_create_mixed_row(Tile.TileNames.orange, Tile.TileNames.water, [startpoint]))
-			_create_path_object(
-				1,
-				Vector3(0, 0, current_furthest_row * 2),
-				Vector3((grid_size_x - 1) * 2, 0, current_furthest_row * 2),
+			var column_start = 0
+			var column_end = 0
+			while abs(column_start - column_end) <= 3:
+				column_start = randi_range(0, grid_size_x - 1)
+				column_end = randi_range(0, grid_size_x - 1)
+			set_row_tiles_ordered(_create_mixed_row(Tile.TileNames.orange, Tile.TileNames.water, [column_start]))
+			path_object_manager.create_platform(
+				Vector3(column_start * 2, 0, current_furthest_row * 2),
+				Vector3(column_end * 2, 0, current_furthest_row * 2),
 			)
 			add_row(Tile.TileNames.water)
-			set_row_tiles_ordered(_create_mixed_row(Tile.TileNames.orange, Tile.TileNames.water, [endpoint]))
+			set_row_tiles_ordered(_create_mixed_row(Tile.TileNames.orange, Tile.TileNames.water, [column_end]))
 		1: # move on z axis
 			# create water
-			var startpoint = rng.randi_range(0, grid_size_x - 1)
+			var column = rng.randi_range(0, grid_size_x - 1) * 2
 			var length = rng.randi_range(3, 4)
-			_create_path_object(
-				1,
-				Vector3(startpoint * 2, 0, current_furthest_row * 2),
-				Vector3(startpoint * 2, 0, (current_furthest_row - (length - 1)) * 2),
+			path_object_manager.create_platform(
+				Vector3(column, 0, current_furthest_row * 2),
+				Vector3(column, 0, (current_furthest_row - (length - 1)) * 2),
 			)
 			for i in range(length):
 				add_row(Tile.TileNames.water)
-
-		2: # move in circle
-			# create water
-			var startpoint = rng.randi_range(0, grid_size_x - 1)
-			var endpoint = rng.randi_range(0, grid_size_x - 1)
-			var length = rng.randi_range(2, 3)
-			set_row_tiles_ordered(_create_mixed_row(Tile.TileNames.orange, Tile.TileNames.water, [startpoint]))
-			_create_path_object(
-				1,
-				Vector3(startpoint * 2, 0, current_furthest_row * 2),
-				Vector3(endpoint * 2, 0, (current_furthest_row - length) * 2),
-			)
-			for i in range(length):
-				add_row(Tile.TileNames.water)
-			add_row(Tile.TileNames.water)
-			set_row_tiles_ordered(_create_mixed_row(Tile.TileNames.orange, Tile.TileNames.water, [endpoint]))
 	
-func _create_path_object(type : int, bottomleft : Vector3, topright : Vector3):
+func _create_car(bottomleft : Vector3, topright : Vector3):
 	var corners = []
 	if bottomleft.x == topright.x or bottomleft.z == topright.z:
 		corners = [bottomleft, topright]
@@ -333,7 +314,7 @@ func _create_path_object(type : int, bottomleft : Vector3, topright : Vector3):
 		corners.append(topright)
 		# append topleft
 		corners.append(Vector3(bottomleft.x, 0, topright.z))
-	path_object_manager.create_path_object(corners, type)
+	path_object_manager.create_car(corners)
 	
 func _set_coins_behind_wall():
 	# THIS IS ONLY FOR grid_size_x = 6 !!!!!!!!

@@ -80,9 +80,6 @@ func _process_movement(_delta):
 				on_platform = null
 				for platform in path_object_manager.platforms:
 					if platform.position.z > global_position.z:
-						path_object_manager.remove_child(platform)
-						path_object_manager.platforms.erase(platform)
-						platform.queue_free()
 						delayed_platform_reward = 50
 			match tile.id:
 				tile.TileNames.tree:
@@ -95,9 +92,10 @@ func _process_movement(_delta):
 					for platform in path_object_manager.platforms:
 						if tile.position == platform.position:
 							on_platform = platform
+							platform.waiting = false
 							# reward for stepping onto platform
 							if Global.game_mode == Global.GameMode.TRAIN:
-								_ai_controller.reward += 50
+								_ai_controller.reward += 100
 							break
 						else:
 							on_platform = null

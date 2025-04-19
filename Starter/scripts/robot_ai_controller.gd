@@ -63,11 +63,19 @@ func get_obs() -> Dictionary:
 				observations.append(no_tile_id)
 			else:
 				var is_car: bool
+				var is_platform: bool
 				for car in player.path_object_manager.cars:
 					if grid_pos == player.map.get_grid_position(car.global_position):
 						is_car = true
+						break
+				for platform in player.path_object_manager.platforms:
+					if grid_pos == player.map.get_grid_position(platform.global_position):
+						is_platform = true
+						break
 				if is_car:
 					observations.append(car_id)
+				elif is_platform:
+					observations.append(platform_id)
 				else:
 					observations.append(tile.id)
 

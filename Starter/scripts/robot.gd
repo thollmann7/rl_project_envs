@@ -49,6 +49,9 @@ func _physics_process(delta):
 		game_over(0)
 	if _ai_controller.needs_reset:
 		game_over(0)
+	if Global.game_mode == Global.GameMode.EVAL and not Global.game_content == Global.GameContent.ALL:
+		if furthest_z_reached < -200:
+			game_over(0)
 	_process_movement(delta)
 
 
@@ -57,7 +60,11 @@ func _process_movement(_delta):
 		if get_grid_position() == map.get_grid_position(car.global_position):
 			# If a car has moved to the current player position, end episode
 			game_over()
-
+	if not on_platform == null:
+		if not on_platform.stopped:
+			global_position.x = on_platform.position.x
+			global_position.z = on_platform.position.z
+			_ai_controller.reward += 20
 	if requested_movement:
 		var delayed_platform_reward = 0
 		if map.instantiated_tiles.size() != map.tile_positions.size():
@@ -123,10 +130,7 @@ func _process_movement(_delta):
 		# (only in case of human control)
 		if _ai_controller.control_mode == AIController3D.ControlModes.HUMAN:
 			requested_movement = Vector3.ZERO 
-	else:
-		if not on_platform == null:
-			global_position.x = on_platform.position.x
-			global_position.z = on_platform.position.z
+
 
 
 
@@ -143,6 +147,7 @@ func game_over(reward = 0.0):
 func reset():
 	current_steps_without_progress = 0
 	furthest_z_reached = 0
+	_ai_controller.reset()
 	# Order of resetting is important:
 	# We reset the map first, which sets a new player start position
 	# and the road segments (needed to know where to spawn the cars)
@@ -151,7 +156,6 @@ func reset():
 	global_position = Vector3(map.player_start_position)
 	# reset camera to initial position
 	camera.reset()
-	_ai_controller.last_observations = null
 
 func print_game_status(message: String):
 	if print_game_status_enabled:

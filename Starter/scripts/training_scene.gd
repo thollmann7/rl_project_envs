@@ -9,15 +9,11 @@ func _ready() -> void:
 	Global.game_mode = Global.GameMode.EVAL if args.has("--eval=True") else Global.GameMode.TRAIN
 
 	if args.has("--c1=True"):
-		Global.game_content = Global.GameContent.TREES_WATER
+		Global.game_content = Global.GameContent.LV1
 	elif args.has("--c2=True"):
-		Global.game_content = Global.GameContent.ROADS
+		Global.game_content = Global.GameContent.LV2
 	elif args.has("--c3=True"):
-		Global.game_content = Global.GameContent.BRIDGES
-	elif args.has("--c4=True"):
-		Global.game_content = Global.GameContent.COINS
-	elif args.has("--c5=True"):
-		Global.game_content = Global.GameContent.PLATFORMS
+		Global.game_content = Global.GameContent.LV3
 	else:
 		Global.game_content = Global.GameContent.ALL
 	

@@ -167,28 +167,24 @@ func create_random_row():
 	var row_to_create: int
 	match Global.game_content:
 		Global.GameContent.ALL:
-			if current_furthest_row > -20:
-				# trees, water-holes and road
-				row_to_create = rng.randi_range(0, 4)
-			elif current_furthest_row > -40:
-				# add maze
-				row_to_create = rng.randi_range(0, 5)
-			elif current_furthest_row > -60:
-				# add coins
-				row_to_create = rng.randi_range(0, 7)
-			else:
+			#if current_furthest_row > -20:
+				## trees, water-holes and road
+				#row_to_create = rng.randi_range(0, 4)
+			#elif current_furthest_row > -40:
+				## add maze
+				#row_to_create = rng.randi_range(0, 5)
+			#elif current_furthest_row > -60:
+				## add coins
+				#row_to_create = rng.randi_range(0, 7)
+			#else:
 				# add river platform
-				row_to_create = rng.randi_range(0, 8)
-		Global.GameContent.TREES_WATER:
-			row_to_create = rng.randi_range(0, 1)
-		Global.GameContent.ROADS:
-			row_to_create = 2
-		Global.GameContent.BRIDGES:
-			row_to_create = rng.randi_range(4, 5)
-		Global.GameContent.COINS:
-			row_to_create = rng.randi_range(6, 7)
-		Global.GameContent.PLATFORMS:
-			row_to_create = 8
+			row_to_create = rng.randi_range(0, 7)
+		Global.GameContent.LV1:
+			row_to_create = rng.randi_range(0, 4)
+		Global.GameContent.LV2:
+			row_to_create = rng.randi_range(5, 6)
+		Global.GameContent.LV3:
+			row_to_create = 7
 		
 	match row_to_create:
 		0: # 2 rows of trees
@@ -199,18 +195,16 @@ func create_random_row():
 			add_row(Tile.TileNames.orange, Tile.TileNames.water, 2)
 		2: # create road
 			_create_road(rng.randi_range(0, 2))
-		3: # create road
-			_create_road(rng.randi_range(0, 2))
-		4: # 1 row of water with a 1-tile-bridge
+		3: # 1 row of water with a 1-tile-bridge
 			add_row(Tile.TileNames.water, Tile.TileNames.orange, 1)
-		5: # maze
+		4: # maze
 			_create_maze(rng.randi_range(2, 4))
-		6:# coins behind wall
+		5:# coins behind wall
 			_set_coins_behind_wall()
-		7: # 1-5 coins infront of door
+		6: # 1-5 coins infront of door
 			add_row(Tile.TileNames.orange, Tile.TileNames.coin, rng.randi_range(1, grid_size_x))
 			add_row(Tile.TileNames.tree, Tile.TileNames.door_closed, 1)
-		8: # create river with moving platform
+		7: # create river with moving platform
 			_create_platform_area(rng.randi_range(0, 2))
 	add_row(Tile.TileNames.orange)
 

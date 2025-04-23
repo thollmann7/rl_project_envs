@@ -185,6 +185,12 @@ func create_random_row():
 			row_to_create = rng.randi_range(5, 6)
 		Global.GameContent.LV3:
 			row_to_create = 7
+		Global.GameContent.T:
+			row_to_create = rng.randi_range(0, 1)
+		Global.GameContent.R:
+			row_to_create = 2
+		Global.GameContent.M:
+			row_to_create = rng.randi_range(3, 4)
 		
 	match row_to_create:
 		0: # 2 rows of trees

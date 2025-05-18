@@ -107,6 +107,7 @@ platform_scene = ExtResource("9_utbpp")
 map = NodePath("../Map")
 camera = NodePath("../Camera3D")
 path_object_manager = NodePath("../PathObjects")
+max_steps_without_progress = 50
 
 [node name="debug_cam" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 30, -10)

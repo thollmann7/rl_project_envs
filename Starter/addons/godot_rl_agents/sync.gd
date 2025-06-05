@@ -10,7 +10,7 @@ enum ControlModes {
 }
 @export var control_mode: ControlModes = ControlModes.TRAINING
 ## Action will be repeated for n frames (Godot physics steps). 
-@export_range(1, 10, 1, "or_greater") var action_repeat := 8
+@export_range(1, 10, 1, "or_greater") var action_repeat := 1
 ## Speeds up the physics in the environment to enable faster training.
 @export_range(0, 10, 0.01, "or_greater") var speed_up := 1.0
 ## The path to a trained .onnx model file to use for inference (only needed for the 'Onnx Inference' control mode).
@@ -215,8 +215,9 @@ func _training_process():
 			#_reset_agents_if_done() # this ensures the new observation is from the next env instance : NEEDS REFACTOR
 
 			var obs = _get_obs_from_agents(agents_training)
+			var fixed_row_index = _get_row_indices(agents_training)
 
-			var reply = {"type": "step", "obs": obs, "reward": reward, "done": done}
+			var reply = {"type": "step", "obs": obs, "reward": reward, "done": done, "row": fixed_row_index}
 			_send_dict_as_json_message(reply)
 
 		var handled = handle_message()
@@ -538,6 +539,11 @@ func _get_obs_from_agents(agents: Array = all_agents):
 		obs.append(agent.get_obs())
 	return obs
 
+func _get_row_indices(agents: Array = all_agents):
+	var indices = []
+	for agent in agents:
+		indices.append(agent.get_row_index())
+	return indices
 
 func _get_reward_from_agents(agents: Array = agents_training):
 	var rewards = []

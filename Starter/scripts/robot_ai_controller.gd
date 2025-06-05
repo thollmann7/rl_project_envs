@@ -92,6 +92,9 @@ func get_obs() -> Dictionary:
 func get_reward() -> float:
 	return reward
 
+func get_row_index() -> int:
+	return player.map.current_furthest_row
+
 func _process(_delta: float) -> void:
 	# In case of human control, we get the user input
 	if control_mode == ControlModes.HUMAN:

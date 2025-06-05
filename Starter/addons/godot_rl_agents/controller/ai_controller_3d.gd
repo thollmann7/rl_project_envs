@@ -12,7 +12,7 @@ enum ControlModes {
 ## The path to a trained .onnx model file to use for inference (overrides the path set in sync node).
 @export var onnx_model_path := ""
 ## Once the number of steps has passed, the flag 'needs_reset' will be set to 'true' for this instance.
-@export var reset_after := 1000
+@export var reset_after := 500
 
 @export_group("Record expert demos mode options")
 ## Path where the demos will be saved. The file can later be used for imitation learning.
@@ -89,8 +89,8 @@ func get_action() -> Array:
 
 func _physics_process(delta):
 	n_steps += 1
-	if n_steps > reset_after:
-		needs_reset = true
+	#if n_steps > reset_after:
+		#needs_reset = true
 
 
 func get_obs_space():

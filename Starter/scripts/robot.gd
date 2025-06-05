@@ -15,7 +15,7 @@ class_name Player
 @onready var visual_robot: Node3D = $robot
 
 var furthest_z_reached = 0
-@export var max_steps_without_progress = 200
+@export var max_steps_without_progress = 1000
 var current_steps_without_progress = 0
 
 var on_platform = null

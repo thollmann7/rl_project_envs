@@ -21,6 +21,7 @@ var grid_size_x = 6
 
 ## Number of rows in the grid
 var current_furthest_row = 0
+var fixed_row_index = 0
 
 const rows_behind_player = 2
 const rows_infrontof_player = 6
@@ -36,6 +37,10 @@ func remove_all_tiles():
 	instantiated_tiles.clear()
 	tile_positions.clear()
 	current_furthest_row = 0
+	fixed_row_index = 0
+	if Global.random_mode == Global.RandomMode.FIXED:
+		rng = RandomNumberGenerator.new()
+		rng.seed = 4
 	for child in path_object_manager.get_children():
 		child.queue_free()
 	path_object_manager.cars.clear()
@@ -93,7 +98,7 @@ func set_row_tiles(row: int, tile: Tile.TileNames, second_tile: Tile.TileNames =
 	 
 	if second_tile_count:
 		for i in second_tile_count:
-			first_tile_columns.remove_at(randi_range(0, first_tile_columns.size() - 1))
+			first_tile_columns.remove_at(rng.randi_range(0, first_tile_columns.size() - 1))
 	
 	for column in range(grid_size_x):
 		var tile_to_create: Tile.TileNames
@@ -165,32 +170,40 @@ func set_row_tiles_ordered(tiles):
 	
 func create_random_row():
 	var row_to_create: int
-	match Global.game_content:
-		Global.GameContent.ALL:
-			#if current_furthest_row > -20:
-				## trees, water-holes and road
-				#row_to_create = rng.randi_range(0, 4)
-			#elif current_furthest_row > -40:
-				## add maze
-				#row_to_create = rng.randi_range(0, 5)
-			#elif current_furthest_row > -60:
-				## add coins
-				#row_to_create = rng.randi_range(0, 7)
-			#else:
-				# add river platform
-			row_to_create = rng.randi_range(0, 7)
-		Global.GameContent.LV1:
-			row_to_create = rng.randi_range(0, 4)
-		Global.GameContent.LV2:
-			row_to_create = rng.randi_range(5, 6)
-		Global.GameContent.LV3:
-			row_to_create = 7
-		Global.GameContent.T:
-			row_to_create = rng.randi_range(0, 1)
-		Global.GameContent.R:
-			row_to_create = 2
-		Global.GameContent.M:
-			row_to_create = rng.randi_range(3, 4)
+	
+	if Global.random_mode == Global.RandomMode.FIXED:
+		row_to_create = fixed_row_index
+		fixed_row_index += 1
+		if fixed_row_index == 8:
+			fixed_row_index = 0
+	else:
+		match Global.game_content:
+			Global.GameContent.ALL:
+				#if current_furthest_row > -20:
+					## trees, water-holes and road
+					#row_to_create = rng.randi_range(0, 4)
+				#elif current_furthest_row > -40:
+					## add maze
+					#row_to_create = rng.randi_range(0, 5)
+				#elif current_furthest_row > -60:
+					## add coins
+					#row_to_create = rng.randi_range(0, 7)
+				#else:
+					# add river platform
+				row_to_create = rng.randi_range(0, 7)
+			Global.GameContent.LV1:
+				row_to_create = rng.randi_range(0, 4)
+			Global.GameContent.LV2:
+				row_to_create = rng.randi_range(5, 6)
+			Global.GameContent.LV3:
+				row_to_create = 7
+			Global.GameContent.T:
+				row_to_create = rng.randi_range(0, 1)
+			Global.GameContent.R:
+				row_to_create = 2
+			Global.GameContent.M:
+				row_to_create = rng.randi_range(3, 4)
+	
 		
 	match row_to_create:
 		0: # 2 rows of trees
@@ -284,8 +297,8 @@ func _create_platform_area(type : int):
 			var column_start = 0
 			var column_end = 0
 			while abs(column_start - column_end) <= 3:
-				column_start = randi_range(0, grid_size_x - 1)
-				column_end = randi_range(0, grid_size_x - 1)
+				column_start = rng.randi_range(0, grid_size_x - 1)
+				column_end = rng.randi_range(0, grid_size_x - 1)
 			set_row_tiles_ordered(_create_mixed_row(Tile.TileNames.orange, Tile.TileNames.water, [column_start]))
 			path_object_manager.create_platform(
 				Vector3(column_start * 2, 0, current_furthest_row * 2),

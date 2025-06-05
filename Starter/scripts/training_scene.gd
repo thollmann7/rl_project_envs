@@ -7,7 +7,9 @@ func _ready() -> void:
 	var args = Array(OS.get_cmdline_args())
 	
 	Global.game_mode = Global.GameMode.EVAL if args.has("--eval=True") else Global.GameMode.TRAIN
-
+	
+	Global.random_mode = Global.RandomMode.FIXED if args.has("--fixed=True") else Global.RandomMode.RANDOM
+	
 	if args.has("--c1=True"):
 		Global.game_content = Global.GameContent.T
 	elif args.has("--c2=True"):
